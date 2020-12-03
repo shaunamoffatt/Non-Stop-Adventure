@@ -12,9 +12,12 @@ public class MenuController : MonoBehaviour
     bool rotating = false;
     //Spin Speed of earth
     //public float speed = 0.1f;
- 
+    string arrow;
     private LEVEL currentLevel = LEVEL.FORREST;
     private readonly RuntimePlatform platform;
+
+    //Set a const for Right arrow so that a chack can be done on it to see if its pressed;
+    const string RIGHTARROW = "RightArrow";
 
     protected Vector3[] levelLocations = {
         new Vector3(0, 0, -45),//Level 1 location
@@ -52,9 +55,9 @@ public class MenuController : MonoBehaviour
             {
                 if (Input.GetTouch(0).phase == TouchPhase.Began)
                 {
+                    checkTouch(Input.GetTouch(0).position);
                     CheckCurrentLevelLocation();
                     RotateEarth(levelLocations[(int)currentLevel]);
-                    checkTouch(Input.GetTouch(0).position);
                 }
 
             }
@@ -63,9 +66,9 @@ public class MenuController : MonoBehaviour
         {
             if (Input.GetMouseButtonDown(0))
             {
+                checkTouch(Input.mousePosition);
                 CheckCurrentLevelLocation();
                 RotateEarth(levelLocations[(int)currentLevel]);
-                checkTouch(Input.mousePosition);
             }
         }
     }
@@ -112,6 +115,7 @@ public class MenuController : MonoBehaviour
             if (hit.transform != null )
             {
                 Debug.Log("Hit " + hit.transform.gameObject.name + " Scale: " + transform.localScale);
+                arrow = hit.transform.gameObject.name;
                 StartCoroutine(ScaleUpAndDown(hit.transform, scaleTime));
             }
     }
@@ -134,16 +138,16 @@ public class MenuController : MonoBehaviour
         switch (currentLevel)
         {
             case LEVEL.FORREST:
-                currentLevel = LEVEL.DESERT;
+                currentLevel = (arrow == RIGHTARROW) ? LEVEL.DESERT : LEVEL.MULTIPLAYER;
                 break;
             case LEVEL.DESERT:
-                currentLevel = LEVEL.SNOW;
+                currentLevel = (arrow == RIGHTARROW) ? LEVEL.SNOW : LEVEL.FORREST;
                 break;
             case LEVEL.SNOW:
-                currentLevel = LEVEL.MULTIPLAYER;
+                currentLevel = (arrow == RIGHTARROW) ? LEVEL.MULTIPLAYER : LEVEL.DESERT;
                 break;
             case LEVEL.MULTIPLAYER:
-                currentLevel = LEVEL.FORREST;
+                currentLevel =  (arrow == RIGHTARROW) ? LEVEL.FORREST : LEVEL.SNOW;
                 break;
         }
 

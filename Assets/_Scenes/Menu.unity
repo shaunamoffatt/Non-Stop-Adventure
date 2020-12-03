@@ -288,7 +288,7 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 7f374a7236d2a5a46ba3a70532e82f57,
         type: 3}
       propertyPath: m_Name
-      value: Left_arrow
+      value: LeftArrow
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 7f374a7236d2a5a46ba3a70532e82f57,
         type: 3}
@@ -1232,7 +1232,7 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 7f374a7236d2a5a46ba3a70532e82f57,
         type: 3}
       propertyPath: m_Name
-      value: Right_arrow
+      value: RightArrow
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 7f374a7236d2a5a46ba3a70532e82f57,
         type: 3}
@@ -1628,9 +1628,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: acca2ceb6bd8cda4295c7efaf8a3750a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  scaleTime: 0.1
-  startingScale: {x: 40, y: 40, z: 23}
   earth: {fileID: 327269489}
+  scaleTime: 0.1
+  durationOfSpin: 1
+  startingScale: {x: 40, y: 40, z: 23}
 --- !u!1 &1651188847
 GameObject:
   m_ObjectHideFlags: 0
