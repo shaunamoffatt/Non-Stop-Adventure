@@ -4,5 +4,26 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/_Scenes/Menu.unity
+    guid: 82c6581937ed2fb4b90e0d0049145def
+  - enabled: 1
+    path: Assets/_Scenes/ForestScene.unity
+    guid: 9bf3adb4b47ff49479c50962ababc918
+  - enabled: 1
+    path: Assets/_Scenes/DesertScene.unity
+    guid: 421962207ea2b7142af8a93047a8959b
+  - enabled: 1
+    path: Assets/_Scenes/TundraScene.unity
+    guid: 842f24a4b8bc4a9499158157188f1a8d
+  - enabled: 1
+    path: Assets/_Scenes/MultiScene.unity
+    guid: 5de8cb402577ecf4da3519eaa1132536
+  - enabled: 1
+    path: Assets/_Scenes/SettingsScene.unity
+    guid: 57c748f463f50384ead48fbc9fb7a4ca
+  - enabled: 1
+    path: Assets/_Scenes/AchievementScene.unity
+    guid: 42fbe8e81172e694fbb3f54ccb2ade19
   m_configObjects: {}

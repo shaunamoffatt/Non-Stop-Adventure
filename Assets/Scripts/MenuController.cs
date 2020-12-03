@@ -1,25 +1,30 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class MenuController : MonoBehaviour
 {
     [SerializeField] GameObject earth;
     [SerializeField] GameObject skyDome;
-    [SerializeField] float scaleTime = 0.1f;
-    [SerializeField] float durationOfSpin = 1f;
+
+    [SerializeField] private float scaleTime = 0.1f;
+    [SerializeField] private float durationOfSpin = 1f;
+
+    //keeping track of the current level we might pick
+    private LEVEL currentLevel = LEVEL.FOREST;
+
     //Size/Scale of the buttons
     [SerializeField] private Vector3 startingScale = new Vector3(1, 1, 1);
-
-    bool rotating = false;
-    //Spin Speed of earth
-    //public float speed = 0.1f;
-    //string arrow;
-    private LEVEL currentLevel = LEVEL.FOREST;
-    private readonly RuntimePlatform platform;
-
+    //rotating puts a lock on the arrow buttons
+    private bool rotating = false;
+    //TODO fix this
+    private const string RIGHTBUTTON = "RightButton";
     bool arrowRight;
+    //Crossfade animationcontroller
+    [SerializeField]Animator anim;
+    //Time to transition between scenes
+    [SerializeField] float transitionTime = 1f;
 
     protected Vector3[] levelLocations = {
         new Vector3(-200, 192, -272),//Level 1 Forest location
@@ -32,10 +37,10 @@ public class MenuController : MonoBehaviour
 
     private enum LEVEL
     {
-        FOREST,
-        DESERT,
-        SNOW,
-        MULTIPLAYER
+        FOREST = 1,
+        DESERT = 2,
+        SNOW = 3,
+        MULTIPLAYER = 4
     }
 
     private void Start()
@@ -52,47 +57,25 @@ public class MenuController : MonoBehaviour
         startingScale = transform.localScale;
     }
 
-    void Update()
+    public void ChangeLevelSelect(Button b)
     {
-        if (rotating == true)
-            return;
-
-        if (platform == RuntimePlatform.Android || platform == RuntimePlatform.IPhonePlayer)
+        if (rotating == false)
         {
-            if (Input.touchCount > 0 && Input.touchCount < 2)
-            {
-                if (Input.GetTouch(0).phase == TouchPhase.Began)
-                {
-
-                }
-
-            }
-        }
-        else if (platform == RuntimePlatform.WindowsEditor || platform == RuntimePlatform.OSXEditor)
-        {
-            if (Input.GetMouseButtonDown(0))
-            {
-
-            }
-        }
-    }
-
-    public void ChangeLevel(bool arrowRight)
-    {
-        nextLevel(arrowRight);
-        rotating = true;
-        if (rotating)
-        {
-            StartCoroutine(RotateEarthandSky(Quaternion.Euler(levelLocations[(int)currentLevel])));
+            rotating = true;
+            string arrowName = b.gameObject.name;
+            nextLevel(arrowName == RIGHTBUTTON);
+            StartCoroutine(ScaleUpAndDown(b));
+            StartCoroutine(RotateEarthandSky());
         }
     }
 
     //https://docs.unity3d.com/ScriptReference/Material-mainTextureOffset.html?_ga=2.58027117.652387074.1606933424-562702184.1602072928
-    IEnumerator RotateEarthandSky(Quaternion finalRotation)
+    IEnumerator RotateEarthandSky()
     {
         float offset = (arrowRight) ? 0.25f : -0.25f;
         Vector3 startingUV = skyDomeRender.material.mainTextureOffset;
         Vector3 endingUV = startingUV + new Vector3(offset, 0, 0);
+        Quaternion finalRotation = Quaternion.Euler(levelLocations[(int)currentLevel-1]);//minus 1 as the LEVEL starts at 1
 
         if (durationOfSpin > 0f)
         {
@@ -112,37 +95,26 @@ public class MenuController : MonoBehaviour
         }
         earth.transform.rotation = finalRotation;
         skyDomeRender.material.mainTextureOffset = endingUV;
+     
         rotating = false;
     }
 
-    private void checkTouch(Vector3 pos)
+    public void ScaleButton(Button b)
     {
-        RaycastHit hit;
-        Ray ray = Camera.main.ScreenPointToRay(pos);
-        if (Physics.Raycast(ray, out hit))
-            if (hit.transform != null )
-            {
-                Debug.Log("Hit " + hit.transform.gameObject.name + " Scale: " + transform.localScale);
-                StartCoroutine(ScaleUpAndDown(hit.transform, scaleTime));
-            }
+        StartCoroutine(ScaleUpAndDown(b));
     }
 
-    public void ScaleButton(Transform transform)
+    IEnumerator ScaleUpAndDown(Button b)
     {
-        StartCoroutine(ScaleUpAndDown(transform, scaleTime));
-    }
-
-    IEnumerator ScaleUpAndDown(Transform transform,  float duration)
-    {
-        Vector3 myScale = transform.localScale * 1.1f;
-        for (float time = 0; time < duration * 2; time += Time.deltaTime)
+        Vector3 myScale = b.transform.localScale * 1.1f;
+        for (float time = 0; time < scaleTime * 2; time += Time.deltaTime)
         {
-            float progress = Mathf.PingPong(time, duration) / duration;
-            transform.localScale = Vector3.Lerp(startingScale, myScale, progress);
+            float progress = Mathf.PingPong(time, scaleTime) / scaleTime;
+            b.transform.localScale = Vector3.Lerp(startingScale, myScale, progress);
             yield return null;
         }
-        //reset scale
-        transform.localScale = startingScale; 
+        //reset scale and unlock button
+        b.transform.localScale = startingScale;
     }
 
     private void nextLevel(bool arrowGoingRight)
@@ -167,8 +139,26 @@ public class MenuController : MonoBehaviour
         Debug.Log("Switched to Level : " + currentLevel);
     }
 
-    public void LoadScene() {
+    //For loading Settings, Achievements and possibly other scenes
+    public void LoadScene(int sceneIndex)
+    {
+        StartCoroutine(LoadSceneWithCrossFade(sceneIndex));
+    }
 
-        SceneManager.LoadScene((int)currentLevel);
+    //For loading a level Scene: takes the current Level in view
+    public void LoadScene()
+    {
+        StartCoroutine(LoadSceneWithCrossFade((int)currentLevel));
+    }
+
+    //https://www.youtube.com/watch?v=CE9VOZivb3I&ab_channel=Brackeys
+    private IEnumerator LoadSceneWithCrossFade(int sceneIndex)
+    {
+        anim.SetTrigger("Start");
+
+        yield return new WaitForSeconds(transitionTime);
+
+        SceneManager.LoadScene(sceneIndex);
+
     }
 }
