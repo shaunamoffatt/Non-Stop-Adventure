@@ -1,21 +1,25 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class MenuController : MonoBehaviour
 {
     [SerializeField] GameObject earth;
+    [SerializeField] GameObject skyDome;
     [SerializeField] float scaleTime = 0.1f;
     [SerializeField] float durationOfSpin = 1f;
     //Size/Scale of the buttons
-    [SerializeField] private Vector3 startingScale = new Vector3(40, 40, 23);
+    [SerializeField] private Vector3 startingScale = new Vector3(1, 1, 1);
 
     bool rotating = false;
     //Spin Speed of earth
     //public float speed = 0.1f;
-    string arrow;
+    //string arrow;
     private LEVEL currentLevel = LEVEL.FOREST;
     private readonly RuntimePlatform platform;
+
+    bool arrowRight;
 
     protected Vector3[] levelLocations = {
         new Vector3(-200, 192, -272),//Level 1 Forest location
@@ -24,6 +28,7 @@ public class MenuController : MonoBehaviour
         new Vector3(160,0,0)//Level 4 multi location
     };
 
+    Renderer skyDomeRender;
 
     private enum LEVEL
     {
@@ -36,9 +41,11 @@ public class MenuController : MonoBehaviour
     private void Start()
     {
         if (earth == null)
-        {
             earth = GameObject.Find("earth");
-        }
+        if (skyDome == null)
+            skyDome = GameObject.Find("SkyDome");
+
+        skyDomeRender = skyDome.GetComponent<Renderer>();
         //game starts at level 1 : Forest
         earth.transform.rotation = Quaternion.Euler(levelLocations[0]);
         //have the gameobject set to scale just in case one hasnt been set
@@ -56,9 +63,7 @@ public class MenuController : MonoBehaviour
             {
                 if (Input.GetTouch(0).phase == TouchPhase.Began)
                 {
-                   // checkTouch(Input.GetTouch(0).position);
-                   // ChangeLevel();
-                   // RotateEarth(levelLocations[(int)currentLevel]);
+
                 }
 
             }
@@ -67,9 +72,7 @@ public class MenuController : MonoBehaviour
         {
             if (Input.GetMouseButtonDown(0))
             {
-                //checkTouch(Input.mousePosition);
-               // ChangeLevel();
-              //  RotateEarth(levelLocations[(int)currentLevel]);
+
             }
         }
     }
@@ -78,32 +81,37 @@ public class MenuController : MonoBehaviour
     {
         nextLevel(arrowRight);
         rotating = true;
-        RotateEarth(levelLocations[(int)currentLevel]);
-    }
-
-    protected virtual void RotateEarth(Vector3 rotateTo)
-    {
         if (rotating)
         {
-            StartCoroutine(RotateOverTime(Quaternion.Euler(rotateTo), durationOfSpin));
+            StartCoroutine(RotateEarthandSky(Quaternion.Euler(levelLocations[(int)currentLevel])));
         }
     }
 
-    IEnumerator RotateOverTime(Quaternion finalRotation, float duration)
+    //https://docs.unity3d.com/ScriptReference/Material-mainTextureOffset.html?_ga=2.58027117.652387074.1606933424-562702184.1602072928
+    IEnumerator RotateEarthandSky(Quaternion finalRotation)
     {
-        if (duration > 0f)
+        float offset = (arrowRight) ? 0.25f : -0.25f;
+        Vector3 startingUV = skyDomeRender.material.mainTextureOffset;
+        Vector3 endingUV = startingUV + new Vector3(offset, 0, 0);
+
+        if (durationOfSpin > 0f)
         {
             float startTime = Time.time;
-            float endTime = startTime + duration;
+            float endTime = startTime + durationOfSpin;
+
             yield return null;
             while (Time.time < endTime)
             {
-                float progress = (Time.time - startTime) / duration;
+                float progress = (Time.time - startTime) / durationOfSpin;
+                //spin the earth
                 earth.transform.rotation = Quaternion.Slerp(earth.transform.rotation, finalRotation, progress);
+                //spin the skydome UVS
+                skyDomeRender.material.mainTextureOffset = Vector2.Lerp(startingUV, endingUV, progress);
                 yield return null;
             }
         }
         earth.transform.rotation = finalRotation;
+        skyDomeRender.material.mainTextureOffset = endingUV;
         rotating = false;
     }
 
@@ -115,7 +123,6 @@ public class MenuController : MonoBehaviour
             if (hit.transform != null )
             {
                 Debug.Log("Hit " + hit.transform.gameObject.name + " Scale: " + transform.localScale);
-                arrow = hit.transform.gameObject.name;
                 StartCoroutine(ScaleUpAndDown(hit.transform, scaleTime));
             }
     }
@@ -138,8 +145,9 @@ public class MenuController : MonoBehaviour
         transform.localScale = startingScale; 
     }
 
-    private void nextLevel(bool arrowRight)
+    private void nextLevel(bool arrowGoingRight)
     {
+        arrowRight = arrowGoingRight;
         switch (currentLevel)
         {
             case LEVEL.FOREST:
