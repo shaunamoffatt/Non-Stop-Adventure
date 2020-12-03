@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class MenuController : MonoBehaviour
 {
@@ -13,22 +14,20 @@ public class MenuController : MonoBehaviour
     //Spin Speed of earth
     //public float speed = 0.1f;
     string arrow;
-    private LEVEL currentLevel = LEVEL.FORREST;
+    private LEVEL currentLevel = LEVEL.FOREST;
     private readonly RuntimePlatform platform;
 
-    //Set a const for Right arrow so that a chack can be done on it to see if its pressed;
-    const string RIGHTARROW = "RightArrow";
-
     protected Vector3[] levelLocations = {
-        new Vector3(0, 0, -45),//Level 1 location
-        new Vector3(-45,-20,95),//LEvel 2 location
-        new Vector3(160,0,0),//Level 3 location
-        new Vector3(-20,80,0)//Level 4 location
+        new Vector3(-200, 192, -272),//Level 1 Forest location
+        new Vector3(-140,70,-140),//Level 2 Desert location
+        new Vector3(-33,-20,95),//LEvel 2 location
+        new Vector3(160,0,0)//Level 4 multi location
     };
 
-    enum LEVEL
+
+    private enum LEVEL
     {
-        FORREST,
+        FOREST,
         DESERT,
         SNOW,
         MULTIPLAYER
@@ -40,6 +39,8 @@ public class MenuController : MonoBehaviour
         {
             earth = GameObject.Find("earth");
         }
+        //game starts at level 1 : Forest
+        earth.transform.rotation = Quaternion.Euler(levelLocations[0]);
         //have the gameobject set to scale just in case one hasnt been set
         startingScale = transform.localScale;
     }
@@ -55,9 +56,9 @@ public class MenuController : MonoBehaviour
             {
                 if (Input.GetTouch(0).phase == TouchPhase.Began)
                 {
-                    checkTouch(Input.GetTouch(0).position);
-                    CheckCurrentLevelLocation();
-                    RotateEarth(levelLocations[(int)currentLevel]);
+                   // checkTouch(Input.GetTouch(0).position);
+                   // ChangeLevel();
+                   // RotateEarth(levelLocations[(int)currentLevel]);
                 }
 
             }
@@ -66,19 +67,18 @@ public class MenuController : MonoBehaviour
         {
             if (Input.GetMouseButtonDown(0))
             {
-                checkTouch(Input.mousePosition);
-                CheckCurrentLevelLocation();
-                RotateEarth(levelLocations[(int)currentLevel]);
+                //checkTouch(Input.mousePosition);
+               // ChangeLevel();
+              //  RotateEarth(levelLocations[(int)currentLevel]);
             }
         }
     }
 
-    void CheckCurrentLevelLocation()
+    public void ChangeLevel(bool arrowRight)
     {
-        Debug.Log("rotating true");
-        nextLevel();
+        nextLevel(arrowRight);
         rotating = true;
-
+        RotateEarth(levelLocations[(int)currentLevel]);
     }
 
     protected virtual void RotateEarth(Vector3 rotateTo)
@@ -120,6 +120,11 @@ public class MenuController : MonoBehaviour
             }
     }
 
+    public void ScaleButton(Transform transform)
+    {
+        StartCoroutine(ScaleUpAndDown(transform, scaleTime));
+    }
+
     IEnumerator ScaleUpAndDown(Transform transform,  float duration)
     {
         Vector3 myScale = transform.localScale * 1.1f;
@@ -133,24 +138,29 @@ public class MenuController : MonoBehaviour
         transform.localScale = startingScale; 
     }
 
-    public void nextLevel()
+    private void nextLevel(bool arrowRight)
     {
         switch (currentLevel)
         {
-            case LEVEL.FORREST:
-                currentLevel = (arrow == RIGHTARROW) ? LEVEL.DESERT : LEVEL.MULTIPLAYER;
+            case LEVEL.FOREST:
+                currentLevel = (arrowRight) ? LEVEL.DESERT : LEVEL.MULTIPLAYER;
                 break;
             case LEVEL.DESERT:
-                currentLevel = (arrow == RIGHTARROW) ? LEVEL.SNOW : LEVEL.FORREST;
+                currentLevel = (arrowRight) ? LEVEL.SNOW : LEVEL.FOREST;
                 break;
             case LEVEL.SNOW:
-                currentLevel = (arrow == RIGHTARROW) ? LEVEL.MULTIPLAYER : LEVEL.DESERT;
+                currentLevel = (arrowRight) ? LEVEL.MULTIPLAYER : LEVEL.DESERT;
                 break;
             case LEVEL.MULTIPLAYER:
-                currentLevel =  (arrow == RIGHTARROW) ? LEVEL.FORREST : LEVEL.SNOW;
+                currentLevel =  (arrowRight) ? LEVEL.FOREST : LEVEL.SNOW;
                 break;
         }
 
         Debug.Log("Switched to Level : " + currentLevel);
+    }
+
+    public void LoadScene() {
+
+        SceneManager.LoadScene((int)currentLevel);
     }
 }
