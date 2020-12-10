@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: WaterMat
+  m_Name: Water
   m_Shader: {fileID: 4800000, guid: 87fb504b14d5ae745bac98fe1169ed94, type: 3}
   m_ShaderKeywords: _EMISSION
   m_LightmapFlags: 1
@@ -39,28 +39,24 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    - _EmissionMap:
+    - _DistTex:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    - _Foam:
+    - _EmissionMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
         m_Texture: {fileID: 2800000, guid: 2b7e9915721aed94cb392c43db44ab33, type: 3}
+        m_Scale: {x: 10, y: 10}
+        m_Offset: {x: 0, y: 0}
+    - _MetallicGlossMap:
+        m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _NoiseTex:
         m_Texture: {fileID: 2800000, guid: a495c7ea5296a86468af7b47b9fcd87b, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _Normal:
-        m_Texture: {fileID: 2800000, guid: fb6566c21f717904f83743a5a76dd0b0, type: 3}
-        m_Scale: {x: 20, y: 20}
-        m_Offset: {x: 0, y: 0}
-    - _Normal2:
-        m_Texture: {fileID: 2800000, guid: fd8b85b15dfe0ad4cbbc5613a12722c6, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _OcclusionMap:
@@ -71,82 +67,41 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    - _SpecGlossMap:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _TextureSample0:
-        m_Texture: {fileID: 2800000, guid: fd8b85b15dfe0ad4cbbc5613a12722c6, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _TextureSample1:
-        m_Texture: {fileID: 2800000, guid: e4ec2a92d2183294d9d9be1f20a1fcdf, type: 3}
-        m_Scale: {x: 10, y: 10}
-        m_Offset: {x: 0, y: 0}
-    - _WaterNormal:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 2, y: 2}
-        m_Offset: {x: 0, y: 0}
-    - _texcoord:
+    - _WaterTex:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
     - _BumpScale: 1
     - _Cutoff: 0.5
-    - _Depth: 0.98
-    - _DepthFactor: 0.82
-    - _DepthFalloff: -13
+    - _DepthFactor: 1.12
     - _DetailNormalMapScale: 1
-    - _DistortStrength: 0.28
-    - _Distortion: 0.2
+    - _DistortStrength: 0.07
     - _DstBlend: 0
-    - _ExtraHeight: -1.59
-    - _Float0: 0.0192
-    - _Float1: 0.85
-    - _Float3: 0.9
-    - _Foam: 1.79
-    - _FoamDepth: 0.3
-    - _FoamFalloff: -50
-    - _FoamPower: 4
-    - _FoamSmoothness: 0.3
-    - _FoamSpecular: 0.3
-    - _Foamfalloff: -4
+    - _ExtraHeight: 0.47
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
-    - _MaskClipValue: 0.5
+    - _Metallic: 0
     - _Mode: 0
-    - _NormalScale: 0
     - _OcclusionStrength: 1
     - _Parallax: 0.02
-    - _ScrollY: 0.5
-    - _ShoreDepth: -6.35
-    - _ShoreFalloff: -10
-    - _Smoothness: 0.9
+    - _ScrollY: 2.1
     - _SmoothnessTextureChannel: 0
-    - _Specular: 0.1
     - _SpecularHighlights: 1
     - _SrcBlend: 1
-    - _TessValue: 6
-    - _Transparencey: 0.66
+    - _TextureVisibility: 1
+    - _Transparencey: 0.98
     - _UVSec: 0
-    - _WaterDepth: 0.99
-    - _WaterFalloff: -10
-    - _WaterSmoothness: 0.3
-    - _WaterSpecular: 0.3
-    - _WaveAmp: -0.61
-    - _WaveSpeed: 3.18
-    - _WavesAmount: 8
-    - _WavesAmplitude: 0.01
+    - _WaterHeight: 0
+    - _WaveAmp: 0.2
+    - _WaveSpeed: 5
     - _ZWrite: 1
-    - __dirty: 0
     m_Colors:
-    - _Color: {r: 0, g: 0.043476235, b: 0.38679248, a: 1}
-    - _Color0: {r: 0, g: 0.6749488, b: 0.8088235, a: 0}
-    - _Color1: {r: 0, g: 0.048731543, b: 0.22794023, a: 0}
-    - _DeepColor: {r: 0.2511125, g: 0.7187613, b: 0.9339623, a: 1}
+    - _Color: {r: 0.4481132, g: 0.67581695, b: 1, a: 1}
+    - _DistTiling: {r: 1, g: 1, b: 1, a: 1}
     - _EdgeColor: {r: 1, g: 1, b: 1, a: 0.5}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _ShalowColor: {r: 1, g: 1, b: 1, a: 1}
-    - _SpecColor: {r: 1, g: 1, b: 1, a: 1}
+    - _MoveDirection: {r: 0, g: 0, b: 0, a: 0}
+    - _Tiling: {r: 1, g: 1, b: 1, a: 1}
+    - _WaterColor: {r: 1, g: 1, b: 1, a: 1}

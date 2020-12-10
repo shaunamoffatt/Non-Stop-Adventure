@@ -13,7 +13,7 @@ Material:
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
-  m_CustomRenderQueue: -1
+  m_CustomRenderQueue: 2000
   stringTagMap: {}
   disabledShaderPasses: []
   m_SavedProperties:
@@ -22,6 +22,10 @@ Material:
     - DisplGuide:
         m_Texture: {fileID: 2800000, guid: 028272dec4f1431459ff35a297142d2e, type: 3}
         m_Scale: {x: 4, y: 2}
+        m_Offset: {x: 0, y: 0}
+    - Ramp:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _BackTex:
         m_Texture: {fileID: 0}
@@ -80,8 +84,8 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: f024bd363932a77478281abf00186900, type: 3}
-        m_Scale: {x: 1, y: 1}
+        m_Texture: {fileID: 2800000, guid: 2b7e9915721aed94cb392c43db44ab33, type: 3}
+        m_Scale: {x: 10, y: 10}
         m_Offset: {x: 0, y: 0}
     - _Mask0:
         m_Texture: {fileID: 0}
@@ -194,18 +198,18 @@ Material:
     - _BumpScale: 1
     - _Cull: 2
     - _Cutoff: 0.5
-    - _DepthFactor: 1
+    - _DepthFactor: -0.13
     - _DepthMaxDistance: 0.24
     - _DetailNormalMapScale: 1
     - _DisplAmount: 1
     - _DisplGuide_ST: 1000
-    - _DistortStrength: 1
+    - _DistortStrength: -2.21
     - _Distortion: 0.13
     - _DstBlend: 0
     - _EdgeThresholdMax: 1
     - _EnableHeightBlend: 0
     - _EnableInstancedPerPixelNormal: 1
-    - _ExtraHeight: 0
+    - _ExtraHeight: -1.15
     - _FoamDepth: 0
     - _FoamFalloff: 0
     - _FoamSmoothness: 0
@@ -226,7 +230,9 @@ Material:
     - _OcclusionStrength: 1
     - _Parallax: 0.02
     - _QueueOffset: 0
-    - _ScrollY: 1
+    - _RampIntensity: 0.5
+    - _ScrollY: 2
+    - _ShadowIntensity: 1
     - _Smoothness0: 0.5
     - _Smoothness1: 0.5
     - _Smoothness2: 0.5
@@ -237,7 +243,7 @@ Material:
     - _Surface: 0
     - _SurfaceNoiseCutoff: 0.5
     - _TextureVisibility: 1
-    - _Transparencey: 1
+    - _Transparencey: 1.02
     - _UVSec: 0
     - _UseAoMap: 0
     - _UseColorMap: 0
@@ -252,8 +258,8 @@ Material:
     - _WaterMinAlpha: 0
     - _WaterSmoothness: 0
     - _WaterSpecular: 0
-    - _WaveAmp: 0
-    - _WaveSpeed: 1
+    - _WaveAmp: 3.58
+    - _WaveSpeed: 0.16
     - _WavesAmount: 0
     - _WavesAmplitude: 0.1
     - _ZWrite: 1
@@ -267,11 +273,13 @@ Material:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _BorderColor: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 0, g: 0.5986936, b: 0.9339623, a: 1}
+    - _ColorMultiply: {r: 1, g: 1, b: 1, a: 1}
+    - _ColorOverride: {r: 1, g: 1, b: 1, a: 0}
     - _DeepColor: {r: 0, g: 0.03888893, b: 1, a: 1}
     - _DepthGradientDeep: {r: 0.8679245, g: 0.05093971, b: 0, a: 1}
     - _DepthGradientShallow: {r: 0.325, g: 0.807, b: 0.971, a: 0.8117647}
     - _DistTiling: {r: 1, g: 1, b: 1, a: 1}
-    - _EdgeColor: {r: 0.754717, g: 0.754717, b: 0.754717, a: 0.14901961}
+    - _EdgeColor: {r: 1, g: 1, b: 1, a: 0.14901961}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _MoveDirection: {r: 0, g: 0, b: 0, a: 0}
     - _ShalowColor: {r: 0, g: 0.56643385, b: 0.9811321, a: 1}

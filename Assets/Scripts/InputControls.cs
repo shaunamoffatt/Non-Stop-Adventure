@@ -7,6 +7,8 @@ public class InputControls : MonoBehaviour
     [SerializeField] float forwardSpeed = 10f;
     [SerializeField] float turnSpeed = 2f;
     [SerializeField] float jumpSpeed = 7f;
+
+    [SerializeField] private float maxSpeed = 11f;
     Rigidbody rb;
     float startPosX;
     public bool grounded = true;
@@ -30,7 +32,13 @@ public class InputControls : MonoBehaviour
     private void FixedUpdate()
     {
         //constantly forward movement
-        rb.AddRelativeForce(Vector3.forward * forwardSpeed);
+        if (rb.velocity.magnitude < maxSpeed)
+        {
+
+            rb.AddRelativeForce(Vector3.forward * forwardSpeed);
+            //rb.velocity = forwardSpeed * (rb.velocity.normalized);
+        }
+
         ProcessMovement();
         Jump();
     }
@@ -52,7 +60,8 @@ public class InputControls : MonoBehaviour
 
             //Rotate on the y
             if (moveHorizontal != 0)
-                transform.Rotate(0, turnSpeed * moveHorizontal, 0);
+                transform.Rotate(0, turnSpeed, 0);
+          //  transform.Rotate(0, turnSpeed * moveHorizontal, 0);
 
         }
         else
@@ -68,11 +77,11 @@ public class InputControls : MonoBehaviour
                     case TouchPhase.Moved:
                         if (startPosX > touch.position.x)
                         {
-                            transform.Rotate(0, -turnSpeed * Time.deltaTime,0);
+                            transform.Rotate(0, -turnSpeed ,0);
                         }
                         else if (startPosX < touch.position.x)
                         {
-                            transform.Rotate(0, turnSpeed * Time.deltaTime,0);
+                            transform.Rotate(0, turnSpeed,0);
                         }
                         break;
                     case TouchPhase.Ended:
