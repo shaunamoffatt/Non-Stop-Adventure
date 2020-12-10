@@ -12,7 +12,8 @@ public class InputControls : MonoBehaviour
     Rigidbody rb;
     float startPosX;
     public bool grounded = true;
-
+    private const string terrainLayer = "Terrain";
+    
     private float distToGround;
 
     // Start is called before the first frame update
@@ -20,12 +21,23 @@ public class InputControls : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         startPosX = 0;
-        // get the distance to ground
+        // get the distance to ground using the box collider
         distToGround = GetComponent<Collider>().bounds.extents.y;
     }
 
     bool IsGrounded()
     {
+        Vector3 position = transform.position;
+        float extra = 0.5f;
+        Debug.Log("distance to ground:" + GetComponent<Collider>().bounds.extents.y + extra + "GROUNDED " + Physics.Raycast(position, Vector3.down, distToGround + extra));
+
+       
+        //position.y += 0.1f;
+        return Physics.Raycast(position, Vector3.down, GetComponent<Collider>().bounds.extents.y + extra);
+
+        // get the distance to ground using the box collider
+        distToGround = GetComponent<Collider>().bounds.extents.y;
+        Debug.Log("distance to ground:" + distToGround + 0.1f + "GROUNDED " + Physics.Raycast(transform.position, -Vector3.up, distToGround + 0.1f));
         return Physics.Raycast(transform.position, -Vector3.up, distToGround + 0.1f);
     }
 
@@ -45,8 +57,10 @@ public class InputControls : MonoBehaviour
 
     void Jump()
     {
+        
         if (Input.GetButtonDown("Jump") && IsGrounded())
         {
+            Debug.Log("Jump presesed");
             rb.AddForce(new Vector3(0, jumpSpeed, 0), ForceMode.Impulse);
             grounded = false;
         }
@@ -60,8 +74,7 @@ public class InputControls : MonoBehaviour
 
             //Rotate on the y
             if (moveHorizontal != 0)
-                transform.Rotate(0, turnSpeed, 0);
-          //  transform.Rotate(0, turnSpeed * moveHorizontal, 0);
+                transform.Rotate(0, turnSpeed * moveHorizontal, 0);
 
         }
         else
