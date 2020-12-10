@@ -159,6 +159,5 @@ public class MenuController : MonoBehaviour
         yield return new WaitForSeconds(transitionTime);
 
         SceneManager.LoadScene(sceneIndex);
-
     }
 }
