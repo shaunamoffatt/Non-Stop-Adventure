@@ -4,17 +4,18 @@ using UnityEngine;
 
 public class InputControls : MonoBehaviour
 {
-    [SerializeField] float forwardSpeed = 10f;
+    [SerializeField] float forwardSpeed = 200;
     [SerializeField] float turnSpeed = 2f;
-    [SerializeField] float jumpSpeed = 7f;
+    [SerializeField] float jumpSpeed = 20f;
 
     [SerializeField] private float maxSpeed = 11f;
     Rigidbody rb;
     float startPosX;
     public bool grounded = true;
-
+    Animator anim;
     
     private float distToGround;
+    private Vector3 dir = Vector3.zero;
 
     // Start is called before the first frame update
     void Start()
@@ -23,31 +24,27 @@ public class InputControls : MonoBehaviour
         startPosX = 0;
         // get the distance to ground using the box collider
         distToGround = GetComponent<Collider>().bounds.extents.y;
+        anim = GetComponentInChildren<Animator>();
     }
 
-    bool IsGrounded()
-    {
-        Vector3 position = transform.position;
-        float extra = 0.5f;
-        Debug.Log("distance to ground:" + GetComponent<Collider>().bounds.extents.y + extra + "GROUNDED " + Physics.Raycast(position, Vector3.down, distToGround + extra));
-
-       
-        //position.y += 0.1f;
-        return Physics.Raycast(position, Vector3.down, GetComponent<Collider>().bounds.extents.y + extra);
-    }
+  
 
     private void FixedUpdate()
     {
+        ProcessConstantForwardMovement();
+        ProcessAnimation();
+        ProcessHorzontalMovement();
+        Jump(); 
+    }
+
+    void ProcessConstantForwardMovement()
+    {
         //constantly forward movement
-        if (rb.velocity.magnitude < maxSpeed)
+        rb.AddRelativeForce(Vector3.forward * forwardSpeed);
+        if (rb.velocity.magnitude > maxSpeed)
         {
-
-            rb.AddRelativeForce(Vector3.forward * forwardSpeed);
-            //rb.velocity = forwardSpeed * (rb.velocity.normalized);
+            rb.velocity = Vector3.ClampMagnitude(rb.velocity, maxSpeed);
         }
-
-        ProcessMovement();
-        Jump();
     }
 
     void Jump()
@@ -57,10 +54,33 @@ public class InputControls : MonoBehaviour
             Debug.Log("Jump presesed");
             rb.AddForce(new Vector3(0, jumpSpeed, 0), ForceMode.Impulse);
             grounded = false;
+        }else
+        {
+            if (IsGrounded()) grounded = true;
         }
     }
 
-    void ProcessMovement()
+    bool IsGrounded()
+    {
+        Vector3 position = transform.position;
+        float extra = 0.5f;
+        return Physics.Raycast(position, Vector3.down, GetComponent<Collider>().bounds.extents.y + extra);
+    }
+
+    void ProcessAnimation()
+    {
+        if (!grounded)
+        {
+            anim.SetBool("Jump", true);
+        }
+
+        if (grounded)
+        {
+            anim.SetBool("Jump", false);
+        }
+    }
+
+    void ProcessHorzontalMovement()
     {
         if (Application.platform != RuntimePlatform.Android || Application.platform != RuntimePlatform.IPhonePlayer)
         {
@@ -68,7 +88,7 @@ public class InputControls : MonoBehaviour
 
             //Rotate on the y
             if (moveHorizontal != 0)
-                transform.Rotate(0, turnSpeed * moveHorizontal, 0);
+               transform.Rotate(0, turnSpeed * moveHorizontal, 0);
 
         }
         else
