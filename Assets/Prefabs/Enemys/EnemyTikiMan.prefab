@@ -983,7 +983,7 @@ PrefabInstance:
     - target: {fileID: 8947582154105346416, guid: 27930efbc52648947a923ab7f4f869f5,
         type: 3}
       propertyPath: m_Speed
-      value: 10
+      value: 220
       objectReference: {fileID: 0}
     - target: {fileID: 8947582154105346416, guid: 27930efbc52648947a923ab7f4f869f5,
         type: 3}
@@ -1038,7 +1038,7 @@ PrefabInstance:
     - target: {fileID: 8947582154105346418, guid: 27930efbc52648947a923ab7f4f869f5,
         type: 3}
       propertyPath: lookRadius
-      value: 10
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 8947582154105346419, guid: 27930efbc52648947a923ab7f4f869f5,
         type: 3}
@@ -1098,6 +1098,16 @@ PrefabInstance:
     - target: {fileID: 8947582154105346422, guid: 27930efbc52648947a923ab7f4f869f5,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8947582154105346423, guid: 27930efbc52648947a923ab7f4f869f5,
+        type: 3}
+      propertyPath: m_Mass
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 8947582154105346423, guid: 27930efbc52648947a923ab7f4f869f5,
+        type: 3}
+      propertyPath: m_AngularDrag
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []

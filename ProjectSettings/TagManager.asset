@@ -20,7 +20,7 @@ TagManager:
   - 
   - OrthographicView
   - Enemy
-  - 
+  - Collectable
   - Collideable
   - Terrain
   - EnvironmentalObjects
