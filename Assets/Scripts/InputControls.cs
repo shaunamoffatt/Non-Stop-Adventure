@@ -34,11 +34,6 @@ public class InputControls : MonoBehaviour
        
         //position.y += 0.1f;
         return Physics.Raycast(position, Vector3.down, GetComponent<Collider>().bounds.extents.y + extra);
-
-        // get the distance to ground using the box collider
-        distToGround = GetComponent<Collider>().bounds.extents.y;
-        Debug.Log("distance to ground:" + distToGround + 0.1f + "GROUNDED " + Physics.Raycast(transform.position, -Vector3.up, distToGround + 0.1f));
-        return Physics.Raycast(transform.position, -Vector3.up, distToGround + 0.1f);
     }
 
     private void FixedUpdate()

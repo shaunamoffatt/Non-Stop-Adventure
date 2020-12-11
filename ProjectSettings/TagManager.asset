@@ -3,7 +3,10 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - Water
+  - Enemy
+  - FxTemporaire
   layers:
   - Default
   - TransparentFX
@@ -16,11 +19,11 @@ TagManager:
   - 
   - 
   - OrthographicView
-  - 
-  - 
-  - 
-  - 
-  - 
+  - Enemy
+  - Player
+  - Collideable
+  - Terrain
+  - EnvironmentalObjects
   - 
   - 
   - 

@@ -37,10 +37,6 @@ public class CollisionHandler : MonoBehaviour
         healthbar.SetHealth(health--);  
     }
 
-    void OnTriggerExit(Collider other)
-    {
-        bloodParticles.SetActive(false);
-    }
 
     private void ReloadScene()
     {
