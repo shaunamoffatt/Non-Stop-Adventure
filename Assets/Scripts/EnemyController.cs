@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -8,6 +7,7 @@ using UnityEngine.AI;
 
 public class EnemyController : MonoBehaviour
 {
+    [SerializeField] GameObject deathParticle;
     public float lookRadius = 10f;
     Transform target;
     NavMeshAgent agent;
@@ -25,6 +25,11 @@ public class EnemyController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        //init deathparticle
+        if(deathParticle == null)
+        {
+            Debug.LogError("EnemyControlller has no deathParticle");
+        }
         waitTime = startWaitTime;
         target = PlayerManager.instance.player.transform;
         agent = GetComponent<NavMeshAgent>();
@@ -46,6 +51,7 @@ public class EnemyController : MonoBehaviour
         float distance = Vector3.Distance(transform.position, target.position);
         if(distance <= lookRadius)
         {
+            Debug.Log("Enemy Follow Player");
             //Chase player
             agent.SetDestination(target.position);
             //FaceTarget
@@ -53,6 +59,7 @@ public class EnemyController : MonoBehaviour
         }
         else
         {
+            Debug.Log("Enemy Patrolling Move to spot : " + moveSpots[randomSpot]);
             //Patrol
             if (!agent.pathPending && agent.remainingDistance < 0.5f)
                 if (waitTime <= 0)
@@ -71,7 +78,6 @@ public class EnemyController : MonoBehaviour
 
     void Patrol()
     {
-        Debug.Log("Enemy Patrolling Move to spot : " + moveSpots[randomSpot]);
         // Returns if no points have been set up
         if (moveSpots.Length == 0)
             return;
@@ -97,7 +103,7 @@ public class EnemyController : MonoBehaviour
 
     private void OnParticleCollision(GameObject other)
     {
-        Debug.Log("hit by object");
+        Debug.Log("hit the Enemy");
         //play blood particel effect
         //bloodParticles.SetActive(true);
         //play die animation
@@ -105,8 +111,18 @@ public class EnemyController : MonoBehaviour
         //Set kinematic to true to allow the enemy to fall
         Rigidbody rb = GetComponent<Rigidbody>();
         rb.isKinematic = false;
-        Destroy(gameObject, 0.2f);
+        StartCoroutine(KillEnemy());
 
+    }
+
+    IEnumerator KillEnemy()
+    {
+        //Play death particles
+        deathParticle.SetActive(true);
+        //Stop collisions
+        gameObject.GetComponent<Collider>().enabled = false;
+        yield return new WaitForSecondsRealtime(0.5f);
+        Destroy(gameObject);
     }
 
     private void OnDestroy()

@@ -35,8 +35,6 @@ public class WhipContoller : MonoBehaviour
             anim.Play("whip");
             whipTrailParticle.SetActive(true);
             StartCoroutine(PlayWhipParticle());
-            
-
         }
     }
 

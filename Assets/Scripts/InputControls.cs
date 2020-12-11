@@ -12,7 +12,7 @@ public class InputControls : MonoBehaviour
     Rigidbody rb;
     float startPosX;
     public bool grounded = true;
-    private const string terrainLayer = "Terrain";
+
     
     private float distToGround;
 
@@ -52,7 +52,6 @@ public class InputControls : MonoBehaviour
 
     void Jump()
     {
-        
         if (Input.GetButtonDown("Jump") && IsGrounded())
         {
             Debug.Log("Jump presesed");

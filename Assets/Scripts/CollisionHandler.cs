@@ -9,9 +9,13 @@ public class CollisionHandler : MonoBehaviour
     [SerializeField] GameObject bloodParticles;
     [SerializeField] float loadDelay = 0.75f;
     [SerializeField]public HealthBar healthbar;
-    [SerializeField] int health = 5;
+    [SerializeField] int health = 10;
 
-    private const string terrainName = "ForestTerrain";
+    private void Start()
+    {
+        healthbar.SetMaxHealth(health);
+    }
+
     private void OnTriggerEnter(Collider collision)
     {
         Debug.Log(collision.gameObject.name.ToString());

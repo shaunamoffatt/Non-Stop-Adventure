@@ -15,4 +15,9 @@ public class PlayerManager : MonoBehaviour
     #endregion
 
     [SerializeField]public GameObject player;
+
+    public void BeginPlay()
+    {
+        player.GetComponent<InputControls>().enabled = true;
+    }
 }
