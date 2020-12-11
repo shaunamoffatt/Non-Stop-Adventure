@@ -22,6 +22,8 @@ public class EnemyController : MonoBehaviour
 
     Rigidbody rb;
 
+    private const int DEADLAYER = 16;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -30,6 +32,11 @@ public class EnemyController : MonoBehaviour
         {
             Debug.LogError("EnemyControlller has no deathParticle");
         }
+        //Set the ragdoll to false
+        SetRigidbodyState(true);
+        SetColliderState(false);
+        GetComponentInChildren<Animator>().enabled = true;
+
         waitTime = startWaitTime;
         target = PlayerManager.instance.player.transform;
         agent = GetComponent<NavMeshAgent>();
@@ -47,11 +54,14 @@ public class EnemyController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //If they are dead return
+        if (gameObject.layer == DEADLAYER)
+            return;
+
         //Check Distance from player target
         float distance = Vector3.Distance(transform.position, target.position);
         if(distance <= lookRadius)
         {
-            Debug.Log("Enemy Follow Player");
             //Chase player
             agent.SetDestination(target.position);
             //FaceTarget
@@ -59,7 +69,6 @@ public class EnemyController : MonoBehaviour
         }
         else
         {
-            Debug.Log("Enemy Patrolling Move to spot : " + moveSpots[randomSpot]);
             //Patrol
             if (!agent.pathPending && agent.remainingDistance < 0.5f)
                 if (waitTime <= 0)
@@ -83,7 +92,7 @@ public class EnemyController : MonoBehaviour
             return;
 
         ///move to a random position
-        agent.destination = moveSpots[randomSpot].position;
+        agent.SetDestination(moveSpots[randomSpot].position);
 
     }
 
@@ -95,22 +104,21 @@ public class EnemyController : MonoBehaviour
         transform.rotation = Quaternion.Slerp(transform.rotation, lookAtRotation, Time.deltaTime * rotateSpeed);
     }
 
-    public void DieOnWhipCollide()
-    {
-        Debug.Log("Going to Destroy Enemy");
-        //TODO kill enemy
-    }
 
     private void OnParticleCollision(GameObject other)
     {
         Debug.Log("hit the Enemy");
-        //play blood particel effect
-        //bloodParticles.SetActive(true);
-        //play die animation
-        //animator.SetTrigger("Die");
-        //Set kinematic to true to allow the enemy to fall
-        Rigidbody rb = GetComponent<Rigidbody>();
-        rb.isKinematic = false;
+
+        //TODO: play die animation (have non yet)
+
+        //Add an implulse force and disable NavMesh agent
+        agent.enabled = false;
+        Vector3 pointOfExplosion = new Vector3(transform.position.x - 0.5f, transform.position.y - 0.5f, transform.position.z - 0.5f);
+
+        //rb.AddExplosionForce(500f, pointOfExplosion, 10, 13);
+        rb.AddForce(-transform.forward * 20, ForceMode.Impulse);
+        //transform.GetComponentInChildren<Rigidbody>().AddForce(new Vector3(0, 0, 100f), ForceMode.Impulse);
+
         StartCoroutine(KillEnemy());
 
     }
@@ -119,21 +127,63 @@ public class EnemyController : MonoBehaviour
     {
         //Play death particles
         deathParticle.SetActive(true);
-        //Stop collisions
-        gameObject.GetComponent<Collider>().enabled = false;
-        yield return new WaitForSecondsRealtime(0.5f);
+        //Change Layer so that it cant hurt the  player
+        //TODO Set the layers up in const game manager DEADPLAYER == 16
+        SetLayerRecursively(gameObject, DEADLAYER);
+        Debug.Log("LAyer : " + gameObject.layer);
+        //Stop  Animations
+        GetComponentInChildren<Animator>().enabled = false;
+        //Start RagDollEffect
+        SetRigidbodyState(false);
+        SetColliderState(true);
+        //Wait 5 secs before destroying
+        yield return new WaitForSecondsRealtime(5f);
         Destroy(gameObject);
     }
 
-    private void OnDestroy()
+    void SetRigidbodyState(bool state)
     {
-        
+        Rigidbody[] rigidbodies = GetComponentsInChildren<Rigidbody>();
+
+        foreach (Rigidbody rigidbody in rigidbodies)
+        {
+            rigidbody.isKinematic = state;
+        }
+
+       //GetComponent<Rigidbody>().isKinematic = !state;
+    }
+
+    //Change all the child objects layers to Dead which is 16
+    public static void SetLayerRecursively(GameObject g, int layerNumber)
+    {
+        if (null == g)
+            return;
+        g.layer = layerNumber;
+        foreach (Transform child in g.transform)
+        {
+            if (null == child)
+                continue;
+            //child.gameobject contains the current child you can do whatever you want like add it to an array
+            child.gameObject.layer = layerNumber;
+            SetLayerRecursively(child.gameObject, layerNumber);
+        }
+    }
+
+    void SetColliderState(bool state)
+    {
+        Collider[] colliders = GetComponentsInChildren<Collider>();
+
+        foreach (Collider collider in colliders)
+        {
+            collider.enabled = state;
+        }
+
+        GetComponent<Collider>().enabled = !state;
     }
 
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, lookRadius);
-
     }
 }

@@ -18,7 +18,12 @@ public class CollisionHandler : MonoBehaviour
 
     private void OnTriggerEnter(Collider collision)
     {
-        Debug.Log(collision.gameObject.name.ToString());
+        Debug.Log(collision.gameObject.layer.ToString());
+
+        //If youve killed the enemy first ignore it
+        //TODO: improve
+        if (collision.gameObject.layer == 16)
+            return;
         //SendMessage("GameObjectCollide");
    
         RunDeathSequence();

@@ -20,12 +20,12 @@ TagManager:
   - 
   - OrthographicView
   - Enemy
-  - Player
+  - 
   - Collideable
   - Terrain
   - EnvironmentalObjects
-  - 
-  - 
+  - Dead
+  - Player
   - 
   - 
   - 
