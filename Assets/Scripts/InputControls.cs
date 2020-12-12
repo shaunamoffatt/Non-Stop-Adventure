@@ -13,21 +13,14 @@ public class InputControls : MonoBehaviour
     float startPosX;
     public bool grounded = true;
     Animator anim;
-    
-    private float distToGround;
-    private Vector3 dir = Vector3.zero;
 
     // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody>();
         startPosX = 0;
-        // get the distance to ground using the box collider
-        distToGround = GetComponent<Collider>().bounds.extents.y;
         anim = GetComponentInChildren<Animator>();
     }
-
-  
 
     private void FixedUpdate()
     {
@@ -54,6 +47,7 @@ public class InputControls : MonoBehaviour
             Debug.Log("Jump presesed");
             rb.AddForce(new Vector3(0, jumpSpeed, 0), ForceMode.Impulse);
             grounded = false;
+            SoundManager.PlaySound(SoundManager.Sound.jump);
         }else
         {
             if (IsGrounded()) grounded = true;

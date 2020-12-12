@@ -1,26 +1,41 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
+using TMPro;
 
 public class PlayerManager : MonoBehaviour
 {
-    #region Singleton
+    [SerializeField] public GameObject player;
+    //Handle Collectable counts
+    [SerializeField] TMP_Text countDisplay;
+    public static int collectableCount = 0;
+    private static int previousCount = 0;
 
+    //For Singleton
     public static PlayerManager instance;
 
     private void Awake()
     {
         instance = this;
+        SoundManager.Initialize();
     }
-    #endregion
 
-    [SerializeField]public GameObject player;
+    private void Start()
+    {
+         countDisplay.text = collectableCount.ToString();
+    }
 
+    private void FixedUpdate()
+    {
+        if (previousCount != collectableCount)
+        {
+            countDisplay.text = collectableCount.ToString();
+            previousCount++;
+        }
+    }
+    //Used in the StartCountDown class to stop the players input and particles
     public void BeginPlay()
     {
         DeactivateAllParticle();
         player.GetComponent<InputControls>().enabled = true;
-       
     }
 
     private void DeactivateAllParticle()
@@ -32,6 +47,4 @@ public class PlayerManager : MonoBehaviour
             childPS.gameObject.SetActive(false);
         }
     }
-
-
 }

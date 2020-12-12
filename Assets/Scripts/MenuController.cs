@@ -45,6 +45,7 @@ public class MenuController : MonoBehaviour
 
     private void Start()
     {
+        
         if (earth == null)
             earth = GameObject.Find("earth");
         if (skyDome == null)

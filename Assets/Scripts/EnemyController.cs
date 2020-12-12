@@ -24,11 +24,16 @@ public class EnemyController : MonoBehaviour
 
     private const int DEADLAYER = 16;
 
+    //Controll the different sound of ememies
+    SoundManager.Sound soundDie, soundAlert;
+
     // Start is called before the first frame update
     void Start()
     {
+        InitializeSound();
+
         //init deathparticle
-        if(deathParticle == null)
+        if (deathParticle == null)
         {
             Debug.LogError("EnemyControlller has no deathParticle");
         }
@@ -51,6 +56,13 @@ public class EnemyController : MonoBehaviour
         rb.isKinematic = true;
     }
 
+    void InitializeSound()
+    {
+        //TODO different sounds for different enemyies
+        soundDie = SoundManager.Sound.tikaDie;
+        soundAlert = SoundManager.Sound.tikaAlert;
+    }
+
     // Update is called once per frame
     void Update()
     {
@@ -64,6 +76,7 @@ public class EnemyController : MonoBehaviour
         {
             //Chase player
             agent.SetDestination(target.position);
+            SoundManager.PlaySound(soundAlert, transform.position);
             //FaceTarget
             FaceTarget();
         }
@@ -108,13 +121,12 @@ public class EnemyController : MonoBehaviour
     private void OnParticleCollision(GameObject other)
     {
         Debug.Log("hit the Enemy");
-
-        //TODO: play die animation (have non yet)
+        //Play Enemy die sound
+        SoundManager.PlaySound(soundDie, transform.position);
 
         //Add an implulse force and disable NavMesh agent
         agent.enabled = false;
-        Vector3 pointOfExplosion = new Vector3(transform.position.x - 0.5f, transform.position.y - 0.5f, transform.position.z - 0.5f);
-
+      
         //rb.AddExplosionForce(500f, pointOfExplosion, 10, 13);
         rb.AddForce(-transform.forward * 20, ForceMode.Impulse);
         //transform.GetComponentInChildren<Rigidbody>().AddForce(new Vector3(0, 0, 100f), ForceMode.Impulse);

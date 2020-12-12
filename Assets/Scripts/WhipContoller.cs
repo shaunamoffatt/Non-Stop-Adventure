@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class WhipContoller : MonoBehaviour
@@ -40,6 +39,7 @@ public class WhipContoller : MonoBehaviour
 
     IEnumerator PlayWhipParticle()
     {
+        SoundManager.PlaySound(SoundManager.Sound.whip);
         yield return new WaitForSeconds(waitTime);
         whipParticles.SetActive(true);
     }

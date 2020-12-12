@@ -1,7 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEditor.UI;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class CollisionHandler : MonoBehaviour
@@ -10,7 +7,7 @@ public class CollisionHandler : MonoBehaviour
     [SerializeField] float loadDelay = 0.75f;
     [SerializeField]public HealthBar healthbar;
     [SerializeField] int health = 10;
-
+    private bool dead = false;
     private void Start()
     {
         healthbar.SetMaxHealth(health);
@@ -18,34 +15,42 @@ public class CollisionHandler : MonoBehaviour
 
     private void OnTriggerEnter(Collider collision)
     {
-        Debug.Log(collision.gameObject.layer.ToString());
 
         //If youve killed the enemy first ignore it
-        //TODO: improve
-        if (collision.gameObject.layer == 16)
+        //Enemy layer 16 and Collectable layer 12
+        if (collision.gameObject.layer == 16 || collision.gameObject.layer == 12 || dead)
             return;
+
         //SendMessage("GameObjectCollide");
-   
-        RunDeathSequence();
 
-        //Invoke("ReloadScene", loadDelay);
+        SoundManager.PlaySound(SoundManager.Sound.hurt);
+        if (health > 0)
+        {
+            CauseDamage();
+        }
+        else
+        {
+            dead = true;
+            Die();
+        }
     }
 
-
-
-    private void OnCollisionEnter(Collision collision)
+    private void Die()
     {
+        //Run Death Sound and make 
+        SoundManager.PlaySound(SoundManager.Sound.bossDie);
 
-
+        //Give the option to Restart Scene or Return to Main Menu
+        ReloadScene();
     }
 
-    private void RunDeathSequence()
+    private void CauseDamage()
     {
         Debug.Log("RunDeathSequence");
         bloodParticles.SetActive(true);
-        healthbar.SetHealth(health--);  
+        health--;
+        healthbar.SetHealth(health);  
     }
-
 
     private void ReloadScene()
     {
