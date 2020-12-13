@@ -1,0 +1,164 @@
+fileFormatVersion: 2
+guid: efcd52218922fb9429b59ee5f134a847
+timeCreated: 1482074816
+licenseType: Store
+ModelImporter:
+  serializedVersion: 18
+  fileIDToRecycleName:
+    100000: //RootNode
+    100002: Camera
+    100004: Cylinder
+    100006: Lamp
+    100008: Candy Cane
+    100010: Cylinder.000
+    100012: Cylinder.001
+    100014: Gift 1
+    100016: Gift2
+    100018: Gift3
+    100020: Nutcracker
+    100022: Sledge
+    100024: Snowman
+    100026: Tree Dead
+    100028: Tree Decorated
+    100030: Tree Glow
+    100032: Tree Snowy
+    100034: Tree Stump
+    400000: //RootNode
+    400002: Camera
+    400004: Cylinder
+    400006: Lamp
+    400008: Candy Cane
+    400010: Cylinder.000
+    400012: Cylinder.001
+    400014: Gift 1
+    400016: Gift2
+    400018: Gift3
+    400020: Nutcracker
+    400022: Sledge
+    400024: Snowman
+    400026: Tree Dead
+    400028: Tree Decorated
+    400030: Tree Glow
+    400032: Tree Snowy
+    400034: Tree Stump
+    2300000: //RootNode
+    2300002: Cylinder
+    2300004: Candy Cane
+    2300006: Cylinder.000
+    2300008: Cylinder.001
+    2300010: Gift 1
+    2300012: Gift2
+    2300014: Gift3
+    2300016: Nutcracker
+    2300018: Sledge
+    2300020: Snowman
+    2300022: Tree Dead
+    2300024: Tree Decorated
+    2300026: Tree Glow
+    2300028: Tree Snowy
+    2300030: Tree Stump
+    3300000: //RootNode
+    3300002: Cylinder
+    3300004: Candy Cane
+    3300006: Cylinder.000
+    3300008: Cylinder.001
+    3300010: Gift 1
+    3300012: Gift2
+    3300014: Gift3
+    3300016: Nutcracker
+    3300018: Sledge
+    3300020: Snowman
+    3300022: Tree Dead
+    3300024: Tree Decorated
+    3300026: Tree Glow
+    3300028: Tree Snowy
+    3300030: Tree Stump
+    4300000: Cylinder
+    4300002: Candy Cane
+    4300004: Tree Stump
+    4300006: Cylinder.000
+    4300008: Snowman
+    4300010: Cylinder.001
+    4300012: Tree Snowy
+    4300014: Tree Glow
+    4300016: Tree Decorated
+    4300018: Tree Dead
+    4300020: Sledge
+    4300022: Nutcracker
+    4300024: Gift3
+    4300026: Gift2
+    4300028: Gift 1
+    6400000: //RootNode
+    6400002: Cylinder
+    6400004: Candy Cane
+    6400006: Cylinder.000
+    6400008: Cylinder.001
+    6400010: Gift 1
+    6400012: Gift2
+    6400014: Gift3
+    6400016: Nutcracker
+    6400018: Sledge
+    6400020: Snowman
+    6400022: Tree Dead
+    6400024: Tree Decorated
+    6400026: Tree Glow
+    6400028: Tree Snowy
+    6400030: Tree Stump
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationCompression: 1
+    animationRotationError: .5
+    animationPositionError: .5
+    animationScaleError: .5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 0
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 1
+    importBlendShapes: 0
+    swapUVChannels: 0
+    generateSecondaryUV: 1
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    splitTangentsAcrossUV: 1
+    normalImportMode: 0
+    tangentImportMode: 1
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: .5
+    foreArmTwist: .5
+    upperLegTwist: .5
+    legTwist: .5
+    armStretch: .0500000007
+    legStretch: .0500000007
+    feetSpacing: 0
+    rootMotionBoneName: 
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 0
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

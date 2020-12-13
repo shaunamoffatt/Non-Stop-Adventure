@@ -1,0 +1,2 @@
+To change color schemes, just go into the Models/Materials folder an apply a texture from the Textures folder to all Materials (Ctrl-A to select all objects in one folder).
+To create your own color scheme, just copy & modify the existing ones. Make sure you use the same import settings ("Format: TrueColor" and "FilterMode: Point" are important).
