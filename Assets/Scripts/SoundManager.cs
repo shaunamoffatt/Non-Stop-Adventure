@@ -26,6 +26,8 @@ public class SoundManager : MonoBehaviour
     {
         soundTimerDictionary = new Dictionary<Sound, float>();
         soundTimerDictionary[Sound.tikaAlert] = 0f;
+        soundTimerDictionary[Sound.mummyAlert] = 0f;
+        soundTimerDictionary[Sound.eskimoAlert] = 0f;
         soundTimerDictionary[Sound.jump] = 0f;
     }
 
@@ -54,16 +56,24 @@ public class SoundManager : MonoBehaviour
         }
     }
 
+    public static float GetSoundLength(Sound s)
+    {
+        return GetAudioClip(s).length;
+    }
+
     private static bool CanPlaySound(Sound sound)
     {
         switch (sound)
         {
-            default:
-                return true;
             case Sound.tikaAlert:
-                return CheckWaitToPlay(5f, sound);
+                {
+                    Debug.Log("Playing enemySound");
+                    return CheckWaitToPlay(5f, sound);
+                }
             case Sound.jump:
                 return CheckWaitToPlay(0.5f, sound);
+            default:
+                return true;
         }
     }
 
@@ -71,16 +81,17 @@ public class SoundManager : MonoBehaviour
     {
         if (soundTimerDictionary.ContainsKey(sound))
         {
+            
             float lastTimePlayed = soundTimerDictionary[sound];
-            float alertSoundTimerMax = waitTime;
-            if (lastTimePlayed + alertSoundTimerMax < Time.time)
+            if (lastTimePlayed + waitTime < Time.time)
             {
                 soundTimerDictionary[sound] = Time.time;
-
+                Debug.Log("sound time for " + sound + "is : " + soundTimerDictionary[sound]);
                 return true;
             }
             else
             {
+                //soundTimerDictionary[sound] = 0;
                 return false;
             }
         }

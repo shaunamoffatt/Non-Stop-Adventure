@@ -102,6 +102,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   deathParticle: {fileID: 6957304836511397627}
   lookRadius: 12
+  patrolSpeed: 2
+  chaseSpeed: 3
+  chaseTimer: 3
+  chaseWaitTime: 5
+  acceleration: 20
+  deceleration: 10
   rotateSpeed: 4
   moveSpots:
   - {fileID: 0}

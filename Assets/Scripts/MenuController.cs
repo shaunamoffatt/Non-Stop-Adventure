@@ -12,7 +12,7 @@ public class MenuController : MonoBehaviour
     [SerializeField] private float durationOfSpin = 1f;
 
     //keeping track of the current level we might pick
-    private LEVEL currentLevel = LEVEL.FOREST;
+    private LevelController.LEVEL currentLevel = LevelController.LEVEL.FOREST;
 
     //Size/Scale of the buttons
     [SerializeField] private Vector3 startingScale = new Vector3(1, 1, 1);
@@ -21,10 +21,8 @@ public class MenuController : MonoBehaviour
     //TODO fix this
     private const string RIGHTBUTTON = "RightButton";
     bool arrowRight;
-    //Crossfade animationcontroller
-    [SerializeField]Animator anim;
-    //Time to transition between scenes
-    [SerializeField] float transitionTime = 1f;
+
+    Renderer skyDomeRender;
 
     protected Vector3[] levelLocations = {
         new Vector3(-200, 192, -272),//Level 1 Forest location
@@ -33,25 +31,16 @@ public class MenuController : MonoBehaviour
         new Vector3(160,0,0)//Level 4 multi location
     };
 
-    Renderer skyDomeRender;
-
-    private enum LEVEL
-    {
-        FOREST = 1,
-        DESERT = 2,
-        SNOW = 3,
-        MULTIPLAYER = 4
-    }
-
     private void Start()
     {
-        
         if (earth == null)
             earth = GameObject.Find("earth");
         if (skyDome == null)
             skyDome = GameObject.Find("SkyDome");
 
         skyDomeRender = skyDome.GetComponent<Renderer>();
+        //Set the sky to 
+        skyDomeRender.material.mainTextureOffset = new Vector3(-0.25f, 0, 0);
         //game starts at level 1 : Forest
         earth.transform.rotation = Quaternion.Euler(levelLocations[0]);
         //have the gameobject set to scale just in case one hasnt been set
@@ -123,42 +112,20 @@ public class MenuController : MonoBehaviour
         arrowRight = arrowGoingRight;
         switch (currentLevel)
         {
-            case LEVEL.FOREST:
-                currentLevel = (arrowRight) ? LEVEL.DESERT : LEVEL.MULTIPLAYER;
+            case LevelController.LEVEL.FOREST:
+                currentLevel = (arrowRight) ? LevelController.LEVEL.DESERT : LevelController.LEVEL.MULTIPLAYER;
                 break;
-            case LEVEL.DESERT:
-                currentLevel = (arrowRight) ? LEVEL.SNOW : LEVEL.FOREST;
+            case LevelController.LEVEL.DESERT:
+                currentLevel = (arrowRight) ? LevelController.LEVEL.SNOW : LevelController.LEVEL.FOREST;
                 break;
-            case LEVEL.SNOW:
-                currentLevel = (arrowRight) ? LEVEL.MULTIPLAYER : LEVEL.DESERT;
+            case LevelController.LEVEL.SNOW:
+                currentLevel = (arrowRight) ? LevelController.LEVEL.MULTIPLAYER : LevelController.LEVEL.DESERT;
                 break;
-            case LEVEL.MULTIPLAYER:
-                currentLevel =  (arrowRight) ? LEVEL.FOREST : LEVEL.SNOW;
+            case LevelController.LEVEL.MULTIPLAYER:
+                currentLevel =  (arrowRight) ? LevelController.LEVEL.FOREST : LevelController.LEVEL.SNOW;
                 break;
         }
-
+        LevelController.currentLevel = currentLevel;
         Debug.Log("Switched to Level : " + currentLevel);
-    }
-
-    //For loading Settings, Achievements and possibly other scenes
-    public void LoadScene(int sceneIndex)
-    {
-        StartCoroutine(LoadSceneWithCrossFade(sceneIndex));
-    }
-
-    //For loading a level Scene: takes the current Level in view
-    public void LoadScene()
-    {
-        StartCoroutine(LoadSceneWithCrossFade((int)currentLevel));
-    }
-
-    //https://www.youtube.com/watch?v=CE9VOZivb3I&ab_channel=Brackeys
-    private IEnumerator LoadSceneWithCrossFade(int sceneIndex)
-    {
-        anim.SetTrigger("Start");
-
-        yield return new WaitForSeconds(transitionTime);
-
-        SceneManager.LoadScene(sceneIndex);
     }
 }

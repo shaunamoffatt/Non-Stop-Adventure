@@ -7,6 +7,8 @@ TagManager:
   - Water
   - Enemy
   - FxTemporaire
+  - SnowFx
+  - collidableRocks
   layers:
   - Default
   - TransparentFX

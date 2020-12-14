@@ -17,8 +17,8 @@ public class CollisionHandler : MonoBehaviour
     {
 
         //If youve killed the enemy first ignore it
-        //Enemy layer 16 and Collectable layer 12
-        if (collision.gameObject.layer == 16 || collision.gameObject.layer == 12 || dead)
+        //Enemy layer 16 and Collectable layer 12 or the pyramids or rocks in the dessert level
+        if (collision.gameObject.layer == 16 || collision.gameObject.layer == 12 || dead || collision.gameObject.tag == "collidableRocks")
             return;
 
         //SendMessage("GameObjectCollide");

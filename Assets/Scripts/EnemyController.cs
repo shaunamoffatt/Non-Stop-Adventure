@@ -7,10 +7,28 @@ using UnityEngine.AI;
 
 public class EnemyController : MonoBehaviour
 {
+    enum Enemy
+    {
+        Tiki,
+        Mummy,
+        Eskimo
+    }
+
     [SerializeField] GameObject deathParticle;
+
     public float lookRadius = 10f;
     Transform target;
     NavMeshAgent agent;
+
+    [SerializeField] public float patrolSpeed = 2f;
+    [SerializeField] public float chaseSpeed = 5f;
+    public float chaseTimer = 3f;
+    public float chaseWaitTime = 5f;
+
+    //Acceleration to help stop the enemy sliding
+    public float acceleration = 10f;
+    public float deceleration = 20f;
+
     [SerializeField] float rotateSpeed = 5f;
 
     [SerializeField] public Transform[] moveSpots;
@@ -18,13 +36,15 @@ public class EnemyController : MonoBehaviour
 
     //set wait times for patroling
     private float waitTime;
-    public float startWaitTime = 3f;
+    public float startWaitTime = 1f;
 
     Rigidbody rb;
 
     private const int DEADLAYER = 16;
+    //switch to Let the enemy follow the player for a certain length of time
+    bool following = false;
 
-    //Controll the different sound of ememies
+    //Control the different sound of ememies
     SoundManager.Sound soundDie, soundAlert;
 
     // Start is called before the first frame update
@@ -37,30 +57,61 @@ public class EnemyController : MonoBehaviour
         {
             Debug.LogError("EnemyControlller has no deathParticle");
         }
+
         //Set the ragdoll to false
         SetRigidbodyState(true);
         SetColliderState(false);
         GetComponentInChildren<Animator>().enabled = true;
 
-        waitTime = startWaitTime;
-        target = PlayerManager.instance.player.transform;
-        agent = GetComponent<NavMeshAgent>();
-        agent.enabled = true;
-        //Set a random start spot
-        if (moveSpots != null)
-            randomSpot = Random.Range(0, moveSpots.Length - 1);
-
         //Init Rigidbody
         rb = GetComponent<Rigidbody>();
         rb.useGravity = false;
         rb.isKinematic = true;
+
+        waitTime = startWaitTime;
+        //SET the target to be that player using th playerManager
+        target = PlayerManager.instance.player.transform;
+        try
+        {
+            agent = GetComponent<NavMeshAgent>();
+        }catch{
+            Debug.LogError("Cant get the navmesh agent");
+        }
+        
+        agent.enabled = true;
+
+        ChooseStartingPatrolSpot();
+    }
+
+    void ChooseStartingPatrolSpot()
+    {
+        //Set a random start spot
+        if (moveSpots != null)
+            randomSpot = Random.Range(0, moveSpots.Length - 1);
+        else
+            Debug.LogError("Forgot to add move spots for the enemy");
     }
 
     void InitializeSound()
     {
+        //soundDie = SoundManager.Sound.tikaDie;
+        //soundAlert = SoundManager.Sound.tikaAlert;
         //TODO different sounds for different enemyies
-        soundDie = SoundManager.Sound.tikaDie;
-        soundAlert = SoundManager.Sound.tikaAlert;
+        switch (LevelController.currentLevel)
+        {
+            case (LevelController.LEVEL.FOREST):
+                soundDie = SoundManager.Sound.tikaDie;
+                soundAlert = SoundManager.Sound.tikaAlert;
+                break;
+            case (LevelController.LEVEL.DESERT):
+                soundDie = SoundManager.Sound.mummyDie;
+                soundAlert = SoundManager.Sound.mummyAlert;
+                break;
+            case (LevelController.LEVEL.SNOW):
+                soundDie = SoundManager.Sound.eskimoDie;
+                soundAlert = SoundManager.Sound.eskimoAlert;
+                break;
+        }
     }
 
     // Update is called once per frame
@@ -69,54 +120,83 @@ public class EnemyController : MonoBehaviour
         //If they are dead return
         if (gameObject.layer == DEADLAYER)
             return;
+        // speed up slowly, but stop quickly
+        if (agent.hasPath)
+            agent.acceleration = (agent.remainingDistance < 0.2f) ? deceleration : acceleration;
 
+        if (following == false)
+        {
+            Patrol();
+        }
         //Check Distance from player target
         float distance = Vector3.Distance(transform.position, target.position);
-        if(distance <= lookRadius)
+        if (distance <= lookRadius)
         {
-            //Chase player
-            agent.SetDestination(target.position);
-            SoundManager.PlaySound(soundAlert, transform.position);
-            //FaceTarget
-            FaceTarget();
+            following = true;
+            ChaseEnemy();
+        }
+    }
+
+    void ChaseEnemy()
+    {
+        //Chase player
+        agent.SetDestination(target.position);
+        agent.speed = chaseSpeed;
+        //Play Alert sound
+        SoundManager.PlaySound(soundAlert, transform.position);
+        //FaceTarget
+        FaceTarget(target.position);
+
+        if (agent.remainingDistance < agent.stoppingDistance)
+        {
+            // increment the timer.
+            chaseTimer += Time.deltaTime;
+
+            // If the timer exceeds the wait time
+            if (chaseTimer >= chaseWaitTime)
+            {
+                following = false;
+                chaseTimer = 0f;
+            }
         }
         else
         {
-            //Patrol
-            if (!agent.pathPending && agent.remainingDistance < 0.5f)
-                if (waitTime <= 0)
-                {
-                    randomSpot = Random.Range(0, moveSpots.Length - 1);
-                    waitTime = startWaitTime;
-                    Patrol();
-                }
-                else
-                {
-                    waitTime -= Time.deltaTime;
-                }
-            Patrol();
+            // If not reset the timer.
+            chaseTimer = 0f;
+            following = false;
         }
+
     }
 
     void Patrol()
     {
-        // Returns if no points have been set up
-        if (moveSpots.Length == 0)
-            return;
+        agent.speed = patrolSpeed;
+       
+        if (!agent.pathPending && agent.remainingDistance < 0.5f)
+            if (waitTime <= 0)
+            {
+                randomSpot = Random.Range(0, moveSpots.Length - 1);
+                waitTime = startWaitTime;
+                FaceTarget(moveSpots[randomSpot].position);
 
+            }
+            else
+            {
+                waitTime -= Time.deltaTime;
+
+            }
+       
         ///move to a random position
         agent.SetDestination(moveSpots[randomSpot].position);
-
     }
 
-    void FaceTarget()
+    void FaceTarget(Vector3 targetPosition)
     {
-        Vector3 dir = (target.position - transform.position).normalized;
+        Vector3 dir = (targetPosition - transform.position).normalized;
         //rotation to look at target
         Quaternion lookAtRotation = Quaternion.LookRotation(new Vector3(dir.x, 0, dir.z));
         transform.rotation = Quaternion.Slerp(transform.rotation, lookAtRotation, Time.deltaTime * rotateSpeed);
     }
-
 
     private void OnParticleCollision(GameObject other)
     {
@@ -132,7 +212,6 @@ public class EnemyController : MonoBehaviour
         //transform.GetComponentInChildren<Rigidbody>().AddForce(new Vector3(0, 0, 100f), ForceMode.Impulse);
 
         StartCoroutine(KillEnemy());
-
     }
 
     IEnumerator KillEnemy()

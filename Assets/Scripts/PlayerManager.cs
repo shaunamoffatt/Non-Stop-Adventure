@@ -5,7 +5,6 @@ public class PlayerManager : MonoBehaviour
 {
     [SerializeField] public GameObject player;
     //Handle Collectable counts
-
     [SerializeField] TMP_Text countDisplay;
     public static int collectableCount = 0;
     private static int previousCount = 0;
@@ -16,7 +15,6 @@ public class PlayerManager : MonoBehaviour
     private void Awake()
     {
         instance = this;
-        SoundManager.Initialize();
     }
 
     private void Start()
