@@ -993,17 +993,32 @@ PrefabInstance:
     - target: {fileID: 8947582154105346416, guid: 27930efbc52648947a923ab7f4f869f5,
         type: 3}
       propertyPath: m_Acceleration
-      value: 20
+      value: 30
       objectReference: {fileID: 0}
     - target: {fileID: 8947582154105346416, guid: 27930efbc52648947a923ab7f4f869f5,
         type: 3}
       propertyPath: m_Radius
       value: 0.1
       objectReference: {fileID: 0}
+    - target: {fileID: 8947582154105346416, guid: 27930efbc52648947a923ab7f4f869f5,
+        type: 3}
+      propertyPath: m_AutoBraking
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8947582154105346417, guid: 27930efbc52648947a923ab7f4f869f5,
         type: 3}
       propertyPath: m_Enabled
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8947582154105346417, guid: 27930efbc52648947a923ab7f4f869f5,
+        type: 3}
+      propertyPath: m_Height
+      value: 2.5623953
+      objectReference: {fileID: 0}
+    - target: {fileID: 8947582154105346417, guid: 27930efbc52648947a923ab7f4f869f5,
+        type: 3}
+      propertyPath: m_Center.y
+      value: 1.3538023
       objectReference: {fileID: 0}
     - target: {fileID: 8947582154105346418, guid: 27930efbc52648947a923ab7f4f869f5,
         type: 3}
@@ -1053,7 +1068,7 @@ PrefabInstance:
     - target: {fileID: 8947582154105346418, guid: 27930efbc52648947a923ab7f4f869f5,
         type: 3}
       propertyPath: chaseSpeed
-      value: 13
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 8947582154105346418, guid: 27930efbc52648947a923ab7f4f869f5,
         type: 3}

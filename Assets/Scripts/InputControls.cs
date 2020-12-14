@@ -14,6 +14,11 @@ public class InputControls : MonoBehaviour
     public bool grounded = true;
     Animator anim;
 
+    public float tapSpeed = 0.2f; //in seconds
+    private float lastTapTime = 0;
+    float touchDuration;
+    Touch touch;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -27,7 +32,7 @@ public class InputControls : MonoBehaviour
         ProcessConstantForwardMovement();
         ProcessAnimation();
         ProcessHorzontalMovement();
-        Jump(); 
+        Jump();
     }
 
     void ProcessConstantForwardMovement()
@@ -44,11 +49,20 @@ public class InputControls : MonoBehaviour
     {
         if (Input.GetButtonDown("Jump") && IsGrounded())
         {
+            if ((Time.time - lastTapTime) < tapSpeed)
+            {
+
+                Debug.Log("Double tap");
+
+            }
+
+            lastTapTime = Time.time;
             Debug.Log("Jump presesed");
             rb.AddForce(new Vector3(0, jumpSpeed, 0), ForceMode.Impulse);
             grounded = false;
             SoundManager.PlaySound(SoundManager.Sound.jump);
-        }else
+        }
+        else
         {
             if (IsGrounded()) grounded = true;
         }
@@ -74,6 +88,8 @@ public class InputControls : MonoBehaviour
         }
     }
 
+
+
     void ProcessHorzontalMovement()
     {
         if (Application.platform != RuntimePlatform.Android || Application.platform != RuntimePlatform.IPhonePlayer)
@@ -82,14 +98,16 @@ public class InputControls : MonoBehaviour
 
             //Rotate on the y
             if (moveHorizontal != 0)
-               transform.Rotate(0, turnSpeed * moveHorizontal, 0);
+                    transform.Rotate(0, turnSpeed * moveHorizontal, 0);
+
+
 
         }
         else
         {
             if (Input.touchCount > 0)
             {
-                Touch touch = Input.GetTouch(0);
+                touch = Input.GetTouch(0);
                 switch (touch.phase)
                 {
                     case TouchPhase.Began:
@@ -98,11 +116,11 @@ public class InputControls : MonoBehaviour
                     case TouchPhase.Moved:
                         if (startPosX > touch.position.x)
                         {
-                            transform.Rotate(0, -turnSpeed ,0);
+                            transform.Rotate(0, -turnSpeed, 0);
                         }
                         else if (startPosX < touch.position.x)
                         {
-                            transform.Rotate(0, turnSpeed,0);
+                            transform.Rotate(0, turnSpeed, 0);
                         }
                         break;
                     case TouchPhase.Ended:

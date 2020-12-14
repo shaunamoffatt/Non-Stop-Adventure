@@ -67,7 +67,14 @@ public class SoundManager : MonoBehaviour
         {
             case Sound.tikaAlert:
                 {
-                    Debug.Log("Playing enemySound");
+                    return CheckWaitToPlay(5f, sound);
+                }
+            case Sound.mummyAlert:
+                {
+                    return CheckWaitToPlay(5f, sound);
+                }
+            case Sound.eskimoDie:
+                {
                     return CheckWaitToPlay(5f, sound);
                 }
             case Sound.jump:
@@ -86,7 +93,6 @@ public class SoundManager : MonoBehaviour
             if (lastTimePlayed + waitTime < Time.time)
             {
                 soundTimerDictionary[sound] = Time.time;
-                Debug.Log("sound time for " + sound + "is : " + soundTimerDictionary[sound]);
                 return true;
             }
             else

@@ -4869,6 +4869,7 @@ MonoBehaviour:
   jumpSpeed: 500
   maxSpeed: 12
   grounded: 1
+  tapSpeed: 0.2
 --- !u!136 &243417351394259405
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -4879,10 +4880,10 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  m_Radius: 0.27
-  m_Height: 0.6652293
+  m_Radius: 0.24886322
+  m_Height: 0.60324097
   m_Direction: 1
-  m_Center: {x: 0, y: -0.80722404, z: 0}
+  m_Center: {x: 0, y: 0.26944518, z: -0.08353424}
 --- !u!1 &281247120232705614
 GameObject:
   m_ObjectHideFlags: 0
@@ -5021,7 +5022,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1126360719311332661}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0, y: -1.14, z: 0}
+  m_LocalPosition: {x: -0, y: 0, z: 0}
   m_LocalScale: {x: 250, y: 250, z: 250}
   m_Children:
   - {fileID: 243417351018253336}

@@ -25,10 +25,6 @@ public class EnemyController : MonoBehaviour
     public float chaseTimer = 3f;
     public float chaseWaitTime = 5f;
 
-    //Acceleration to help stop the enemy sliding
-    public float acceleration = 10f;
-    public float deceleration = 20f;
-
     [SerializeField] float rotateSpeed = 5f;
 
     [SerializeField] public Transform[] moveSpots;
@@ -41,12 +37,11 @@ public class EnemyController : MonoBehaviour
     Rigidbody rb;
 
     private const int DEADLAYER = 16;
-    //switch to Let the enemy follow the player for a certain length of time
-    bool following = false;
 
     //Control the different sound of ememies
     SoundManager.Sound soundDie, soundAlert;
 
+    bool chasing = false;
     // Start is called before the first frame update
     void Start()
     {
@@ -121,73 +116,51 @@ public class EnemyController : MonoBehaviour
         if (gameObject.layer == DEADLAYER)
             return;
         // speed up slowly, but stop quickly
-        if (agent.hasPath)
-            agent.acceleration = (agent.remainingDistance < 0.2f) ? deceleration : acceleration;
+        //if (agent.hasPath)
+        //    agent.acceleration = (agent.remainingDistance < 0.2f) ? deceleration : acceleration;
+        //agent.acceleration = acceleration;
 
-        if (following == false)
-        {
-            Patrol();
-        }
         //Check Distance from player target
         float distance = Vector3.Distance(transform.position, target.position);
         if (distance <= lookRadius)
         {
-            following = true;
             ChaseEnemy();
+        }
+        if (distance > lookRadius)
+        {
+            Patrol();
         }
     }
 
     void ChaseEnemy()
     {
         //Chase player
-        agent.SetDestination(target.position);
+        //agent.SetDestination(new Vector3(target.transform.position.x, 0, target.transform.position.y));
+        agent.destination = target.transform.position;
         agent.speed = chaseSpeed;
         //Play Alert sound
         SoundManager.PlaySound(soundAlert, transform.position);
         //FaceTarget
         FaceTarget(target.position);
-
-        if (agent.remainingDistance < agent.stoppingDistance)
-        {
-            // increment the timer.
-            chaseTimer += Time.deltaTime;
-
-            // If the timer exceeds the wait time
-            if (chaseTimer >= chaseWaitTime)
-            {
-                following = false;
-                chaseTimer = 0f;
-            }
-        }
-        else
-        {
-            // If not reset the timer.
-            chaseTimer = 0f;
-            following = false;
-        }
-
     }
 
     void Patrol()
     {
+        ///move to a random position
+        agent.SetDestination(moveSpots[randomSpot].position);
+        FaceTarget(moveSpots[randomSpot].position);
         agent.speed = patrolSpeed;
        
-        if (!agent.pathPending && agent.remainingDistance < 0.5f)
+        if (!agent.pathPending && agent.remainingDistance < 0.1f)
             if (waitTime <= 0)
             {
                 randomSpot = Random.Range(0, moveSpots.Length - 1);
                 waitTime = startWaitTime;
-                FaceTarget(moveSpots[randomSpot].position);
-
             }
             else
             {
                 waitTime -= Time.deltaTime;
-
             }
-       
-        ///move to a random position
-        agent.SetDestination(moveSpots[randomSpot].position);
     }
 
     void FaceTarget(Vector3 targetPosition)
@@ -207,9 +180,7 @@ public class EnemyController : MonoBehaviour
         //Add an implulse force and disable NavMesh agent
         agent.enabled = false;
       
-        //rb.AddExplosionForce(500f, pointOfExplosion, 10, 13);
         rb.AddForce(-transform.forward * 20, ForceMode.Impulse);
-        //transform.GetComponentInChildren<Rigidbody>().AddForce(new Vector3(0, 0, 100f), ForceMode.Impulse);
 
         StartCoroutine(KillEnemy());
     }
@@ -241,7 +212,7 @@ public class EnemyController : MonoBehaviour
             rigidbody.isKinematic = state;
         }
 
-       //GetComponent<Rigidbody>().isKinematic = !state;
+      GetComponent<Rigidbody>().isKinematic = !state;
     }
 
     //Change all the child objects layers to Dead which is 16
