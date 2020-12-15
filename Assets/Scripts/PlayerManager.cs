@@ -35,6 +35,11 @@ public class PlayerManager : MonoBehaviour
             countDisplay.text = collectableCount.ToString();
             previousCount++;
         }
+        if (previousCount != playerScore)
+        {
+            scoreDisplay.text = playerScore.ToString();
+            previousCount = playerScore;
+        }
     }
     //Used in the StartCountDown class to stop the players input and particles
     public void BeginPlay()

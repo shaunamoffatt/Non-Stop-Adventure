@@ -22,13 +22,14 @@ public class EnemyController : MonoBehaviour
 
     [SerializeField] public float patrolSpeed = 2f;
     [SerializeField] public float chaseSpeed = 5f;
-    public float chaseTimer = 3f;
-    public float chaseWaitTime = 5f;
+
+    float patrolStartTime = 0;
 
     [SerializeField] float rotateSpeed = 5f;
 
-    [SerializeField] public Transform[] moveSpots;
-    private int randomSpot;
+    // used for patrolling
+    private Vector3 randomSpot;
+    public float randomRange = 10f;
 
     //set wait times for patroling
     private float waitTime;
@@ -37,11 +38,12 @@ public class EnemyController : MonoBehaviour
     Rigidbody rb;
 
     private const int DEADLAYER = 16;
-
+  
     //Control the different sound of ememies
     SoundManager.Sound soundDie, soundAlert;
+    // used to briefly stop the enemy chasing the player onCollision
+    bool collided = false;
 
-    bool chasing = false;
     // Start is called before the first frame update
     void Start()
     {
@@ -53,7 +55,7 @@ public class EnemyController : MonoBehaviour
         {
             Debug.LogError("EnemyControlller has no deathParticle");
         }
-        //Play death particles once 
+        //Play death particles once when spawing
         deathParticle.SetActive(true);
 
         //Set the ragdoll to false
@@ -66,11 +68,7 @@ public class EnemyController : MonoBehaviour
         waitTime = startWaitTime;
         //SET the target to be that player using th playerManager
         target = PlayerManager.instance.player.transform;
-
-       
-        //InitializeNavMeshAgent();
         
-        ChooseStartingPatrolSpot();
         EnableNavMeshAgent();
     }
 
@@ -86,15 +84,12 @@ public class EnemyController : MonoBehaviour
         }
     }
 
-    void ChooseStartingPatrolSpot()
+    Vector3 ChooseRandomSpot()
     {
-        //Set a random start spot
-        if (moveSpots != null)
-        {
-            randomSpot = Random.Range(0, moveSpots.Length - 1);
-        }
-        else
-            Debug.LogError("Forgot to add move spots for the enemy");
+        float randomSpotx = transform.position.x + Random.Range(-randomRange, +randomRange);
+        float randomSpotz = transform.position.z + Random.Range(-randomRange, +randomRange);
+
+        return new Vector3(randomSpotx, 0, randomSpotz);
     }
 
     void InitializeRigidBody()
@@ -105,13 +100,6 @@ public class EnemyController : MonoBehaviour
         rb.isKinematic = true;
     }
 
-    //void InitializeNavMeshAgent()
-    //{
-    //    agent = GetComponent<NavMeshAgent>();
-    //    agent.enabled = false;
-    //    // Invoke is used as a workaround for enabling NavMeshAgent on NavMeshSurface
-    //    Invoke("EnableNavMeshAgent", 0.025f);
-    //}
     void InitializeSound()
     {
         switch (LevelController.currentLevel)
@@ -138,13 +126,8 @@ public class EnemyController : MonoBehaviour
         if (gameObject.layer == DEADLAYER)
             return;
 
-        if (agent.enabled)
+        if (agent.isOnNavMesh && !collided)
         {
-            // speed up slowly, but stop quickly
-            //if (agent.hasPath)
-            //    agent.acceleration = (agent.remainingDistance < 0.2f) ? deceleration : acceleration;
-            //agent.acceleration = acceleration;
-
             //Check Distance from player target
             float distance = Vector3.Distance(transform.position, target.position);
             if (distance <= lookRadius)
@@ -161,7 +144,6 @@ public class EnemyController : MonoBehaviour
     void ChaseEnemy()
     {
         //Chase player
-        //agent.SetDestination(new Vector3(target.transform.position.x, 0, target.transform.position.y));
         agent.destination = target.transform.position;
         agent.speed = chaseSpeed;
         //Play Alert sound
@@ -173,20 +155,54 @@ public class EnemyController : MonoBehaviour
     void Patrol()
     {
         ///move to a random position
-        agent.SetDestination(moveSpots[randomSpot].position);
-        FaceTarget(moveSpots[randomSpot].position);
+        agent.SetDestination(randomSpot);
+        FaceTarget(randomSpot);
         agent.speed = patrolSpeed;
-       
-        if (!agent.pathPending && agent.remainingDistance < 0.1f)
+
+        if (!agent.pathPending && agent.remainingDistance < 0.1f || patrolStartTime < 5f)
+        {
+            patrolStartTime += Time.deltaTime;
             if (waitTime <= 0)
             {
-                randomSpot = Random.Range(0, moveSpots.Length - 1);
+                randomSpot = ChooseRandomSpot();
                 waitTime = startWaitTime;
+                patrolStartTime = 0f;
             }
             else
             {
                 waitTime -= Time.deltaTime;
             }
+        }
+    }
+
+    void OnTriggerEnter(Collider collision)
+    {
+        //Using the players tag 17 to stop chase briefly
+        if (collision.gameObject.layer == 17) 
+        {
+            collided = true;
+            Debug.Log("Collided with player");
+            StartCoroutine(Rotate());
+        }
+    }
+
+    //Rotate 360degrees
+    IEnumerator Rotate()
+    {
+        float startRotation = transform.eulerAngles.y;
+        float endRotation = startRotation + 360.0f;
+        float t = 0.0f;
+        while (t < 1f)
+        {
+            t += Time.deltaTime;
+            float yRotation = Mathf.Lerp(startRotation, endRotation, t / 1f) % 360.0f;
+            transform.eulerAngles = new Vector3(transform.eulerAngles.x, yRotation, transform.eulerAngles.z);
+            yield return null;
+
+        }
+        yield return new WaitForSeconds(2);
+        collided = false;
+
     }
 
     void FaceTarget(Vector3 targetPosition)
@@ -255,7 +271,6 @@ public class EnemyController : MonoBehaviour
         {
             if (null == child)
                 continue;
-            //child.gameobject contains the current child you can do whatever you want like add it to an array
             child.gameObject.layer = layerNumber;
             SetLayerRecursively(child.gameObject, layerNumber);
         }
@@ -277,5 +292,6 @@ public class EnemyController : MonoBehaviour
     {
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, lookRadius);
+        Gizmos.DrawWireSphere(randomSpot, 3);
     }
 }
