@@ -41,7 +41,8 @@ public class CollisionHandler : MonoBehaviour
         SoundManager.PlaySound(SoundManager.Sound.bossDie);
 
         //Give the option to Restart Scene or Return to Main Menu
-        ReloadScene();
+        PlayerManager.levelState = ENDSTATE.LOSE;
+        LevelController.paused = true;
     }
 
     private void CauseDamage()

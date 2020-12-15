@@ -8,14 +8,11 @@ public class MenuController : MonoBehaviour
     [SerializeField] GameObject earth;
     [SerializeField] GameObject skyDome;
 
-    [SerializeField] private float scaleTime = 0.1f;
-    [SerializeField] private float durationOfSpin = 1f;
-
     //keeping track of the current level we might pick
     private LevelController.LEVEL currentLevel = LevelController.LEVEL.FOREST;
 
-    //Size/Scale of the buttons
-    [SerializeField] private Vector3 startingScale = new Vector3(1, 1, 1);
+    [SerializeField] private float durationOfSpin = 1f;
+
     //rotating puts a lock on the arrow buttons
     private bool rotating = false;
     //TODO fix this
@@ -43,8 +40,6 @@ public class MenuController : MonoBehaviour
         skyDomeRender.material.mainTextureOffset = new Vector3(-0.25f, 0, 0);
         //game starts at level 1 : Forest
         earth.transform.rotation = Quaternion.Euler(levelLocations[0]);
-        //have the gameobject set to scale just in case one hasnt been set
-        startingScale = transform.localScale;
     }
 
     public void ChangeLevelSelect(Button b)
@@ -54,7 +49,7 @@ public class MenuController : MonoBehaviour
             rotating = true;
             string arrowName = b.gameObject.name;
             nextLevel(arrowName == RIGHTBUTTON);
-            StartCoroutine(ScaleUpAndDown(b));
+            //StartCoroutine(ScaleUpAndDown(b));
             StartCoroutine(RotateEarthandSky());
         }
     }
@@ -87,24 +82,6 @@ public class MenuController : MonoBehaviour
         skyDomeRender.material.mainTextureOffset = endingUV;
      
         rotating = false;
-    }
-
-    public void ScaleButton(Button b)
-    {
-        StartCoroutine(ScaleUpAndDown(b));
-    }
-
-    IEnumerator ScaleUpAndDown(Button b)
-    {
-        Vector3 myScale = b.transform.localScale * 1.1f;
-        for (float time = 0; time < scaleTime * 2; time += Time.deltaTime)
-        {
-            float progress = Mathf.PingPong(time, scaleTime) / scaleTime;
-            b.transform.localScale = Vector3.Lerp(startingScale, myScale, progress);
-            yield return null;
-        }
-        //reset scale and unlock button
-        b.transform.localScale = startingScale;
     }
 
     private void nextLevel(bool arrowGoingRight)

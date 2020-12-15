@@ -33,6 +33,7 @@ public class StartCountDown : MonoBehaviour
 
         yield return new WaitForSecondsRealtime(1f);
 
+        gameObject.GetComponent<Timer>().enabled = true;
         countDownDisplay.gameObject.SetActive(false);
     }
 }

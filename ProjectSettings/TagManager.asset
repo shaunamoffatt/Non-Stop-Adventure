@@ -10,6 +10,8 @@ TagManager:
   - SnowFx
   - collidableRocks
   - spawn
+  - boss
+  - end
   layers:
   - Default
   - TransparentFX
