@@ -134,10 +134,10 @@ Light:
   serializedVersion: 10
   m_Type: 0
   m_Shape: 0
-  m_Color: {r: 1, g: 0.97338027, b: 0.811, a: 1}
-  m_Intensity: 3
-  m_Range: 5
-  m_SpotAngle: 101
+  m_Color: {r: 1, g: 0.95803857, b: 0.7122642, a: 1}
+  m_Intensity: 4
+  m_Range: 2.89326
+  m_SpotAngle: 30.2
   m_InnerSpotAngle: 7.6
   m_CookieSize: 10
   m_Shadows:
@@ -289,7 +289,7 @@ GameObject:
   - component: {fileID: 6643664929220844057}
   - component: {fileID: 104290559856883983}
   m_Layer: 0
-  m_Name: StreetLamp1_ShortDouble (Wood)
+  m_Name: StreetLamp
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -416,10 +416,10 @@ Light:
   serializedVersion: 10
   m_Type: 0
   m_Shape: 0
-  m_Color: {r: 1, g: 0.97338027, b: 0.811, a: 1}
-  m_Intensity: 3
-  m_Range: 5
-  m_SpotAngle: 101
+  m_Color: {r: 1, g: 0.95803857, b: 0.7122642, a: 1}
+  m_Intensity: 4
+  m_Range: 2.89326
+  m_SpotAngle: 30.2
   m_InnerSpotAngle: 7.6
   m_CookieSize: 10
   m_Shadows:

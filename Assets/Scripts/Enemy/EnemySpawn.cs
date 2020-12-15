@@ -18,7 +18,6 @@ public class EnemySpawn : MonoBehaviour
             CreateEnemy();
         }
         StartCoroutine(Spawn());
-
     }
 
     private IEnumerator Spawn()
@@ -41,8 +40,6 @@ public class EnemySpawn : MonoBehaviour
         if (!agent.isOnNavMesh)
         {
             agent.transform.position = spawnPos;
-            //bool t = agent.Warp(spawnPos);
-            //Debug.Log("WARP SUCCESS: " + t);
             agent.enabled = false;
             agent.enabled = true;
         }
