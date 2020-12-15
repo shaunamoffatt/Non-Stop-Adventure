@@ -9,6 +9,7 @@ TagManager:
   - FxTemporaire
   - SnowFx
   - collidableRocks
+  - spawn
   layers:
   - Default
   - TransparentFX

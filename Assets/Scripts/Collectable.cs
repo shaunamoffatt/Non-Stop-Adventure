@@ -24,6 +24,7 @@ public class Collectable : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         PlayerManager.collectableCount++;
+        PlayerManager.playerScore += 10;
         SoundManager.PlaySound(SoundManager.Sound.collect);
         Destroy(gameObject);
     }

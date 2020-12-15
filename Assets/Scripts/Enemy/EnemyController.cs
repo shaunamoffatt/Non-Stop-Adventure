@@ -45,6 +45,7 @@ public class EnemyController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+       
         InitializeSound();
 
         //init deathparticle
@@ -52,46 +53,67 @@ public class EnemyController : MonoBehaviour
         {
             Debug.LogError("EnemyControlller has no deathParticle");
         }
+        //Play death particles once 
+        deathParticle.SetActive(true);
 
         //Set the ragdoll to false
         SetRigidbodyState(true);
         SetColliderState(false);
         GetComponentInChildren<Animator>().enabled = true;
 
-        //Init Rigidbody
-        rb = GetComponent<Rigidbody>();
-        rb.useGravity = false;
-        rb.isKinematic = true;
+        InitializeRigidBody();
 
         waitTime = startWaitTime;
         //SET the target to be that player using th playerManager
         target = PlayerManager.instance.player.transform;
-        try
-        {
-            agent = GetComponent<NavMeshAgent>();
-        }catch{
-            Debug.LogError("Cant get the navmesh agent");
-        }
-        
-        agent.enabled = true;
 
+       
+        //InitializeNavMeshAgent();
+        
         ChooseStartingPatrolSpot();
+        EnableNavMeshAgent();
+    }
+
+    private void EnableNavMeshAgent()
+    {
+        agent = GetComponent<NavMeshAgent>();
+        agent.enabled = true;
+        if (!agent.isOnNavMesh)
+        {
+            agent.transform.position = transform.position;
+            agent.enabled = false;
+            agent.enabled = true;
+        }
     }
 
     void ChooseStartingPatrolSpot()
     {
         //Set a random start spot
         if (moveSpots != null)
+        {
             randomSpot = Random.Range(0, moveSpots.Length - 1);
+        }
         else
             Debug.LogError("Forgot to add move spots for the enemy");
     }
 
+    void InitializeRigidBody()
+    {
+        //Init Rigidbody
+        rb = GetComponent<Rigidbody>();
+        rb.useGravity = false;
+        rb.isKinematic = true;
+    }
+
+    //void InitializeNavMeshAgent()
+    //{
+    //    agent = GetComponent<NavMeshAgent>();
+    //    agent.enabled = false;
+    //    // Invoke is used as a workaround for enabling NavMeshAgent on NavMeshSurface
+    //    Invoke("EnableNavMeshAgent", 0.025f);
+    //}
     void InitializeSound()
     {
-        //soundDie = SoundManager.Sound.tikaDie;
-        //soundAlert = SoundManager.Sound.tikaAlert;
-        //TODO different sounds for different enemyies
         switch (LevelController.currentLevel)
         {
             case (LevelController.LEVEL.FOREST):
@@ -115,20 +137,24 @@ public class EnemyController : MonoBehaviour
         //If they are dead return
         if (gameObject.layer == DEADLAYER)
             return;
-        // speed up slowly, but stop quickly
-        //if (agent.hasPath)
-        //    agent.acceleration = (agent.remainingDistance < 0.2f) ? deceleration : acceleration;
-        //agent.acceleration = acceleration;
 
-        //Check Distance from player target
-        float distance = Vector3.Distance(transform.position, target.position);
-        if (distance <= lookRadius)
+        if (agent.enabled)
         {
-            ChaseEnemy();
-        }
-        if (distance > lookRadius)
-        {
-            Patrol();
+            // speed up slowly, but stop quickly
+            //if (agent.hasPath)
+            //    agent.acceleration = (agent.remainingDistance < 0.2f) ? deceleration : acceleration;
+            //agent.acceleration = acceleration;
+
+            //Check Distance from player target
+            float distance = Vector3.Distance(transform.position, target.position);
+            if (distance <= lookRadius)
+            {
+                ChaseEnemy();
+            }
+            if (distance > lookRadius)
+            {
+                Patrol();
+            }
         }
     }
 
@@ -192,6 +218,10 @@ public class EnemyController : MonoBehaviour
         //Change Layer so that it cant hurt the  player
         //TODO Set the layers up in const game manager DEADPLAYER == 16
         SetLayerRecursively(gameObject, DEADLAYER);
+
+        //Update Player Score
+        PlayerManager.playerScore += 50;
+
         Debug.Log("LAyer : " + gameObject.layer);
         //Stop  Animations
         GetComponentInChildren<Animator>().enabled = false;

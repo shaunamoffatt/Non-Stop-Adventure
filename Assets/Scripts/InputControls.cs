@@ -100,8 +100,6 @@ public class InputControls : MonoBehaviour
             if (moveHorizontal != 0)
                     transform.Rotate(0, turnSpeed * moveHorizontal, 0);
 
-
-
         }
         else
         {

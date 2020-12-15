@@ -19,8 +19,9 @@ public class GameAssets : MonoBehaviour
 
     }
 
-    public SoundAudioClip[] soundAudioClips;
+    public GameObject tikaEnemy;
 
+    public SoundAudioClip[] soundAudioClips;
     [System.Serializable]
     public class SoundAudioClip
     {

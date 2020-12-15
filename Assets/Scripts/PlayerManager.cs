@@ -8,6 +8,11 @@ public class PlayerManager : MonoBehaviour
     [SerializeField] TMP_Text countDisplay;
     public static int collectableCount = 0;
     private static int previousCount = 0;
+    //Handle Score
+    [SerializeField] TMP_Text scoreDisplay;
+    public static int playerScore;
+    private static int previousScore = 0;
+
 
     //For Singleton
     public static PlayerManager instance;
@@ -20,6 +25,7 @@ public class PlayerManager : MonoBehaviour
     private void Start()
     {
          countDisplay.text = collectableCount.ToString();
+        scoreDisplay.text = playerScore.ToString();
     }
 
     private void FixedUpdate()
