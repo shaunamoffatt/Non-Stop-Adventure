@@ -80,11 +80,11 @@ Material:
     - _ColorMask: 15
     - _CullMode: 0
     - _Cutoff: 0.5
-    - _DepthFactor: 0.83
+    - _DepthFactor: 0.8
     - _DetailNormalMapScale: 1
     - _DistortStrength: 1
     - _DstBlend: 0
-    - _ExtraHeight: -0.2
+    - _ExtraHeight: -1.41
     - _FaceDilate: 0
     - _GlossMapScale: 1
     - _Glossiness: 0.5
@@ -104,7 +104,7 @@ Material:
     - _ScaleRatioC: 1
     - _ScaleX: 1
     - _ScaleY: 1
-    - _ScrollY: -2.2
+    - _ScrollY: -1.75
     - _ShaderFlags: 0
     - _Sharpness: 0
     - _SmoothnessTextureChannel: 0
@@ -118,7 +118,7 @@ Material:
     - _TextureHeight: 512
     - _TextureVisibility: 1
     - _TextureWidth: 512
-    - _Transparencey: 1
+    - _Transparencey: 1.08
     - _UVSec: 0
     - _UnderlayDilate: 0
     - _UnderlayOffsetX: 0
@@ -127,8 +127,8 @@ Material:
     - _VertexOffsetX: 0
     - _VertexOffsetY: 0
     - _WaterHeight: 0
-    - _WaveAmp: 0.05
-    - _WaveSpeed: 1.52
+    - _WaveAmp: 0.03
+    - _WaveSpeed: 1.88
     - _WeightBold: 0.5
     - _WeightNormal: 0
     - _ZWrite: 1
