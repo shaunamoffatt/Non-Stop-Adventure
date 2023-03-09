@@ -22,10 +22,11 @@ public class PathFollower : MonoBehaviour
         if (offset.sqrMagnitude > reachDistance)
         {
             offset = offset.normalized;
-            transform.Translate(offset * speed * Time.deltaTime, Space.World);
-
-            Quaternion lookRot = Quaternion.LookRotation(offset);
-            transform.rotation = Quaternion.Slerp(transform.rotation, lookRot, rotSpeed * Time.deltaTime);
+            if (offset != Vector3.zero){
+                transform.Translate(offset * speed * Time.deltaTime, Space.World);
+                Quaternion lookRot =    Quaternion.LookRotation(offset);
+                transform.rotation = Quaternion.Slerp(transform.rotation, lookRot, rotSpeed * Time.deltaTime);
+            }
         }
         else
         {

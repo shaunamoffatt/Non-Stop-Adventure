@@ -4,7 +4,6 @@ using UnityEngine.AI;
 
 [RequireComponent(typeof(NavMeshAgent))]
 [RequireComponent(typeof(Rigidbody))]
-
 public class EnemyController : MonoBehaviour
 {
     enum Enemy
@@ -14,18 +13,23 @@ public class EnemyController : MonoBehaviour
         Eskimo
     }
 
-    [SerializeField] GameObject deathParticle;
+    [SerializeField]
+    GameObject deathParticle;
 
     public float lookRadius = 10f;
     Transform target;
     NavMeshAgent agent;
 
-    [SerializeField] public float patrolSpeed = 2f;
-    [SerializeField] public float chaseSpeed = 5f;
+    [SerializeField]
+    public float patrolSpeed = 2f;
+
+    [SerializeField]
+    public float chaseSpeed = 5f;
 
     float patrolStartTime = 0;
 
-    [SerializeField] float rotateSpeed = 5f;
+    [SerializeField]
+    float rotateSpeed = 2.5f;
 
     // used for patrolling
     private Vector3 randomSpot;
@@ -38,16 +42,17 @@ public class EnemyController : MonoBehaviour
     Rigidbody rb;
 
     private const int DEADLAYER = 16;
-  
+
     //Control the different sound of ememies
-    SoundManager.Sound soundDie, soundAlert;
+    SoundManager.Sound soundDie,
+        soundAlert;
+
     // used to briefly stop the enemy chasing the player onCollision
     bool collided = false;
 
     // Start is called before the first frame update
     void Start()
     {
-       
         InitializeSound();
 
         //init deathparticle
@@ -68,7 +73,7 @@ public class EnemyController : MonoBehaviour
         waitTime = startWaitTime;
         //SET the target to be that player using th playerManager
         target = PlayerManager.instance.player.transform;
-        
+
         EnableNavMeshAgent();
     }
 
@@ -178,7 +183,7 @@ public class EnemyController : MonoBehaviour
     void OnTriggerEnter(Collider collision)
     {
         //Using the players tag 17 to stop chase briefly
-        if (collision.gameObject.layer == 17) 
+        if (collision.gameObject.layer == 17)
         {
             collided = true;
             Debug.Log("Collided with player");
@@ -196,21 +201,30 @@ public class EnemyController : MonoBehaviour
         {
             t += Time.deltaTime;
             float yRotation = Mathf.Lerp(startRotation, endRotation, t / 1f) % 360.0f;
-            transform.eulerAngles = new Vector3(transform.eulerAngles.x, yRotation, transform.eulerAngles.z);
+            transform.eulerAngles = new Vector3(
+                transform.eulerAngles.x,
+                yRotation,
+                transform.eulerAngles.z
+            );
             yield return null;
-
         }
         yield return new WaitForSeconds(2);
         collided = false;
-
     }
 
     void FaceTarget(Vector3 targetPosition)
     {
         Vector3 dir = (targetPosition - transform.position).normalized;
-        //rotation to look at target
-        Quaternion lookAtRotation = Quaternion.LookRotation(new Vector3(dir.x, 0, dir.z));
-        transform.rotation = Quaternion.Slerp(transform.rotation, lookAtRotation, Time.deltaTime * rotateSpeed);
+        if (dir.x != 0 && dir.z != 0)
+        {
+            //rotation to look at target
+            Quaternion lookAtRotation = Quaternion.LookRotation(new Vector3(dir.x, 0, dir.z));
+            transform.rotation = Quaternion.Slerp(
+                transform.rotation,
+                lookAtRotation,
+                Time.deltaTime * rotateSpeed
+            );
+        }
     }
 
     private void OnParticleCollision(GameObject other)
@@ -221,8 +235,8 @@ public class EnemyController : MonoBehaviour
 
         //Add an implulse force and disable NavMesh agent
         agent.enabled = false;
-      
-        rb.AddForce(-transform.forward * 20, ForceMode.Impulse);
+
+        rb.AddForce(-transform.forward * 200, ForceMode.Impulse);
 
         StartCoroutine(KillEnemy());
     }
@@ -258,7 +272,7 @@ public class EnemyController : MonoBehaviour
             rigidbody.isKinematic = state;
         }
 
-      GetComponent<Rigidbody>().isKinematic = !state;
+        GetComponent<Rigidbody>().isKinematic = !state;
     }
 
     //Change all the child objects layers to Dead which is 16

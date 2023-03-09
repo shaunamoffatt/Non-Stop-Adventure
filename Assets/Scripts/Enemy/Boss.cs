@@ -5,7 +5,7 @@ using TMPro;
 public class Boss : MonoBehaviour
 {
     SoundManager.Sound soundDie;
-    int bossHealth = 2;
+    int bossHealth = 1;
     public TMP_Text bossHP;
     bool hit = false;
 
@@ -13,8 +13,7 @@ public class Boss : MonoBehaviour
     void Start()
     {
         soundDie = SoundManager.Sound.bossDie;
-
-        bossHP.text = "boss_hp: "+ bossHealth.ToString();
+        bossHP.text = "boss_hp: " + bossHealth.ToString();
     }
 
     private void OnParticleCollision(GameObject other)
@@ -22,7 +21,7 @@ public class Boss : MonoBehaviour
         if (!hit)
         {
             //hit = true;
-           
+
             //Play Enemy die sound for pain
             //TODO get more sounds
             SoundManager.PlaySound(soundDie, transform.position);
@@ -63,7 +62,7 @@ public class Boss : MonoBehaviour
             LevelController.paused = true;
             Destroy(gameObject);
         }
-       // hit = false;
+        // hit = false;
         yield return new WaitForSecondsRealtime(2f);
     }
 }

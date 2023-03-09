@@ -4,11 +4,17 @@ using UnityEngine;
 
 public class InputControls : MonoBehaviour
 {
-    [SerializeField] float forwardSpeed = 200;
-    [SerializeField] float turnSpeed = 2f;
-    [SerializeField] float jumpSpeed = 20f;
+    [SerializeField]
+    float forwardSpeed = 200;
 
-    [SerializeField] private float maxSpeed = 11f;
+    [SerializeField]
+    float turnSpeed = 3f;
+
+    [SerializeField]
+    float jumpSpeed = 20f;
+
+    [SerializeField]
+    private float maxSpeed = 11f;
     Rigidbody rb;
     float startPosX;
     public bool grounded = true;
@@ -30,15 +36,34 @@ public class InputControls : MonoBehaviour
     private void FixedUpdate()
     {
         ProcessConstantForwardMovement();
+        //MovementContols();
         ProcessAnimation();
         ProcessHorzontalMovement();
         Jump();
     }
 
+    void MovementContols()
+    {
+        Rigidbody rb = GetComponent<Rigidbody>();
+        if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow))
+            rb.AddForce(Vector3.left);
+        if (Input.GetKey(KeyCode.D))
+            rb.AddForce(Vector3.right);
+        if (Input.GetKey(KeyCode.W))
+            rb.AddForce(Vector3.up);
+        if (Input.GetKey(KeyCode.S))
+            rb.AddForce(Vector3.down);
+    }
+
     void ProcessConstantForwardMovement()
     {
         //constantly forward movement
-        rb.AddRelativeForce(Vector3.forward * forwardSpeed);
+        if (Input.GetKey(KeyCode.W))
+            rb.AddRelativeForce(Vector3.forward * forwardSpeed);
+
+        if (Input.GetKey(KeyCode.S))
+            rb.AddRelativeForce(-Vector3.forward * forwardSpeed);
+
         if (rb.velocity.magnitude > maxSpeed)
         {
             rb.velocity = Vector3.ClampMagnitude(rb.velocity, maxSpeed);
@@ -51,9 +76,7 @@ public class InputControls : MonoBehaviour
         {
             if ((Time.time - lastTapTime) < tapSpeed)
             {
-
                 Debug.Log("Double tap");
-
             }
 
             lastTapTime = Time.time;
@@ -64,15 +87,20 @@ public class InputControls : MonoBehaviour
         }
         else
         {
-            if (IsGrounded()) grounded = true;
+            if (IsGrounded())
+                grounded = true;
         }
     }
 
     bool IsGrounded()
     {
         Vector3 position = transform.position;
-        float extra = 0.5f;
-        return Physics.Raycast(position, Vector3.down, GetComponent<Collider>().bounds.extents.y + extra);
+        float extra = 0.1f;
+        return Physics.Raycast(
+            position,
+            Vector3.down,
+            GetComponent<Collider>().bounds.extents.y + extra
+        );
     }
 
     void ProcessAnimation()
@@ -88,18 +116,18 @@ public class InputControls : MonoBehaviour
         }
     }
 
-
-
     void ProcessHorzontalMovement()
     {
-        if (Application.platform != RuntimePlatform.Android || Application.platform != RuntimePlatform.IPhonePlayer)
+        if (
+            Application.platform != RuntimePlatform.Android
+            || Application.platform != RuntimePlatform.IPhonePlayer
+        )
         {
             float moveHorizontal = Input.GetAxis("Horizontal");
 
             //Rotate on the y
             if (moveHorizontal != 0)
-                    transform.Rotate(0, turnSpeed * moveHorizontal, 0);
-
+                transform.Rotate(0, turnSpeed * moveHorizontal, 0);
         }
         else
         {

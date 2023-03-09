@@ -4,26 +4,32 @@ using UnityEngine;
 public class WhipContoller : MonoBehaviour
 {
     Animator anim;
-    [SerializeField] GameObject whipParticles;
-    [SerializeField] float waitTime = 1f;
-    [SerializeField] GameObject whipTrailParticle;
+
+    [SerializeField]
+    GameObject whipParticles;
+
+    [SerializeField]
+    float waitTime = 1f;
+
+    [SerializeField]
+    GameObject whipTrailParticle;
     bool whipping = false;
+
     private void Start()
     {
         anim = GetComponent<Animator>();
-        if(whipParticles == null || whipTrailParticle == null)
+        if (whipParticles == null || whipTrailParticle == null)
         {
             Debug.LogError("Error: Missing some Whip Particle GameObject Reference");
         }
     }
+
     private void OnTriggerEnter(Collider collision)
     {
         Debug.Log(collision.gameObject.name.ToString());
-        if(collision.gameObject.tag == "Enemy")
-            SendMessage("DieOnWhipCollide",null, SendMessageOptions.DontRequireReceiver);
-       
+        if (collision.gameObject.tag == "Enemy")
+            SendMessage("DieOnWhipCollide", null, SendMessageOptions.DontRequireReceiver);
     }
-
 
     private void Update()
     {

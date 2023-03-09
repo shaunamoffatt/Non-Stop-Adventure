@@ -47,7 +47,7 @@ public class PlayerManager : MonoBehaviour
         switch (levelState)
         {
             case ENDSTATE.WIN:
-                endText.text = "YOU WIN!";
+                endText.text = "YOU WIN!\n boop";
                 break;
             case ENDSTATE.LOSE:
                 endText.text = "YOU LOSE";
